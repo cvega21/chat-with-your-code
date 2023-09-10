@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Project wide type checking with TypeScript",
+      "type": "npm",
+      "script": "check-types",
+      "problemMatcher": ["$tsc"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "group": "group1",
+      }
+    },
+    {
+      "label": "next.js",
+      "type": "npm",
+      "script": "dev",
+      "detail": "next.js",
+      "presentation": {
+        "group": "group1"
+    },
+      "isBackground": true
+    },
+    {
+      "label": "Run Both Tasks",
+      "dependsOn": [
+        "Project wide type checking with TypeScript",
+        "next.js"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

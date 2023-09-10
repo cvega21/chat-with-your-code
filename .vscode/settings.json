@@ -1,0 +1,51 @@
+{
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "gitlens.blame.ignoreWhitespace": true,
+  "editor.tabSize": 4,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "eslint.format.enable": true,
+  "eslint.options": {
+      "cache": true
+  },
+  "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "npm.packageManager": "yarn",
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+  "workbench.colorCustomizations": {
+      "activityBar.background": "#2a1633",
+      "titleBar.activeBackground": "#35263d",
+      "titleBar.activeForeground": "#F8FCF7",
+      "editor.background": "#1d191f",
+      "list.inactiveSelectionBackground": "#4d3c4d",
+      "sideBar.background": "#302734",
+      "list.hoverBackground": "#493a4f",
+      "list.activeSelectionBackground": "#65526c",
+      "sideBar.border": "#81745f",
+      "sideBar.dropBackground": "#261e29",
+      "sideBar.foreground": "#ffffff",
+      "sideBarSectionHeader.background": "#261e29",
+      "sideBarSectionHeader.border": "#452e51",
+      "tab.activeBackground": "#1d191f",
+      "tab.inactiveBackground": "#302734"
+  },
+  "javascript.format.semicolons": "remove",
+  "typescript.format.semicolons": "remove",
+  "editor.formatOnSave": true,
+  "prettier.configPath": ".prettierrc.json",
+  "prettier.prettierPath": "./node_modules/prettier",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.ignorePath": ".prettierignore",
+  "jest.autoRun": {
+    "onStartup": []
+}
+  // "debug.javascript.autoAttachFilter": "smart"
+}
