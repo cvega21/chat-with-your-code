@@ -1,22 +1,22 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
 
 export const LoginButton = () => {
-    const { data: session } = useSession()
+    const supabase = useSupabaseClient()
 
-    const handleLogin = async () => {
-        if (!session) {
-            await signIn('github')
-        } else {
-            await signOut()
-        }
-    }
 
     return (
-        <button onClick={handleLogin} className='bg-stone-800 text-white px-2 py-1 rounded-lg'>
-            {!session ? 'Login with Github' : 'Log out'}
-        </button>
+        <Auth
+            supabaseClient={supabase}
+            providers={['github']}
+            socialLayout='horizontal'
+            appearance={{ theme: ThemeSupa }}
+            redirectTo='http://localhost:54321/auth/v1/callback'
+        />
     )
 }
