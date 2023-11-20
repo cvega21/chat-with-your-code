@@ -10,16 +10,15 @@ export const AllRepoMeta = () => {
     const user = useUser()
     const session = useSession()
     const [repoData, setRepoData] = useState<RepoData[]>([])
-    const { octokit, username, initOctokit } = useGithubContext()
+    const { octokit, username, getOctokit } = useGithubContext()
 
     const getRepoInfo = async () => {
-        if (!session) return
-        if (!session.provider_token) return
-        if (!octokit) await initOctokit(session.provider_token)
+        const octokit = await getOctokit()
+        if (!octokit) return console.error('no octokit')
+        if (!username) return console.error('no username')
         console.log({ session })
-        const githubUsername = session.user.user_metadata.user_name
-        const repos = await octokit!.request('GET /users/{username}/repos', {
-            username: githubUsername,
+        const repos = await octokit.request('GET /users/{username}/repos', {
+            username,
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28',
             },
