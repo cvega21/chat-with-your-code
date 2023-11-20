@@ -16,6 +16,7 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@octokit/core": "^5.0.1",
     "@octokit/types": "^12.3.0",
     "@supabase/auth-helpers-react": "^0.4.2",
     "@supabase/auth-ui-react": "^0.4.6",
