@@ -1,5 +1,4 @@
 import '../styles/global.css'
-import { SessionProvider } from 'next-auth/react'
 import { SessionContextProvider, Session } from '@supabase/auth-helpers-react'
 
 import type { AppProps } from 'next/app'

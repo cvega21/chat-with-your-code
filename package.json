@@ -11,11 +11,12 @@
     "clean": "rimraf .next .swc out coverage",
     "lint": "next lint",
     "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
-    "check-types": "tsc --noEmit --pretty && tsc --noEmit --pretty",
+    "check-types": "tsc --noEmit --pretty --watch",
     "test": "jest",
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@octokit/types": "^12.3.0",
     "@supabase/auth-helpers-react": "^0.4.2",
     "@supabase/auth-ui-react": "^0.4.6",
     "@supabase/auth-ui-shared": "^0.1.8",
