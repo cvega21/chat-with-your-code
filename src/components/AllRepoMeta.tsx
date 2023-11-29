@@ -2,14 +2,14 @@ import React from 'react'
 import { LoginButton } from '@/components/LoginButton'
 import { useSession, useUser } from '@supabase/auth-helpers-react'
 import { useEffect, useState } from 'react'
-import { RepoData } from '@/types/Github'
+import { UsernameReposResponse } from '@/types/Github'
 import { RepoMeta } from '@/components/RepoMeta'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
 
 export const AllRepoMeta = () => {
     const user = useUser()
     const session = useSession()
-    const [repoData, setRepoData] = useState<RepoData[]>([])
+    const [userReposMeta, setUserReposMeta] = useState<UsernameReposResponse[]>([])
     const { octokit, username, getOctokit } = useOctokitContext()
 
     const getRepoInfo = async () => {
@@ -23,7 +23,7 @@ export const AllRepoMeta = () => {
                 'X-GitHub-Api-Version': '2022-11-28',
             },
         })
-        setRepoData(repos.data)
+        setUserReposMeta(repos.data)
         console.log({ repos })
     }
 
@@ -38,8 +38,8 @@ export const AllRepoMeta = () => {
             <button onClick={getRepoInfo} className='p-2 border text-white bg-black'>
                 Get all repo info
             </button>
-            {repoData &&
-                repoData.map(repo => {
+            {userReposMeta &&
+                userReposMeta.map(repo => {
                     return <RepoMeta repo={repo} key={repo.url} />
                 })}
         </div>

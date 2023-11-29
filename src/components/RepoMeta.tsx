@@ -1,16 +1,17 @@
 import React from 'react'
-import { RepoData, RepoLanguage } from '@/types/Github'
+import { UsernameReposResponse, GithubFile } from '@/types/Github'
 import { Tag } from './Tag'
-import { getLanguageColor, languageColors } from '@/utils/styles'
+import { getLanguageColor } from '@/utils/styles'
 import { BasicButton } from './BasicButton'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
+import { GithubFilesPanel } from './GithubFilesPanel'
 
-export const RepoMeta = ({ repo }: { repo: RepoData }) => {
+export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
     const { name, fork, description, html_url, visibility, owner, language } = repo
     const { login: ownerName, avatar_url } = owner
     const { bgColor, textColor } = getLanguageColor(language ?? '')
     const { getOctokit } = useOctokitContext()
-    const files = []
+    const [files, setFiles] = React.useState<GithubFile[]>([])
 
     const getRepoContent = async () => {
         console.debug('getRepoContent', repo)
@@ -23,21 +24,26 @@ export const RepoMeta = ({ repo }: { repo: RepoData }) => {
             path: '',
             mediaType: {
                 format: 'raw',
-            }
+            },
         })
+
         console.log(repoContent)
-        //@ts-expect-error
-        const file1 = repoContent.data[3]
-        console.log({file1})
-        const fileContent = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-            owner: ownerName,
-            repo: name,
-            path: file1.path,
-            mediaType: {
-                format: 'raw',
-            }
-        })
-        console.log({fileContent})
+
+        if (Array.isArray(repoContent.data)) {
+            const githubFiles = repoContent.data.map(file => {
+                const { name, size, type, path } = file
+                return {
+                    name,
+                    size,
+                    type,
+                    path,
+                } as GithubFile
+            })
+            setFiles(githubFiles)
+        } else {
+            const singleFile = repoContent.data
+            setFiles([singleFile])
+        }
     }
 
     return (
@@ -53,11 +59,12 @@ export const RepoMeta = ({ repo }: { repo: RepoData }) => {
                     {name}
                 </a>
                 {fork && <Tag text='Forked' />}
-                <BasicButton text={'Get Code'} onClick={getRepoContent} />
+                <BasicButton text={'Get Files'} onClick={getRepoContent} />
             </div>
             <p className='italic font-light text-stone-500'>{visibility}</p>
             <p className='font-light'>{description}</p>
             {language && <Tag text={language} bgColor={bgColor} textColor={textColor} />}
+            {files.length > 0 && <GithubFilesPanel files={files} />}
         </div>
     )
 }
