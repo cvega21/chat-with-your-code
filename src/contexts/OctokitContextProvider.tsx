@@ -2,15 +2,15 @@ import { Octokit } from '@octokit/core'
 import { useSession } from '@supabase/auth-helpers-react'
 import React, { createContext, useEffect } from 'react'
 
-export type IGithubContext = {
+export type IOctokitContext = {
     octokit: Octokit | null
     username: string | null
 	getOctokit: () => Promise<Octokit | null>
 }
 
-export const GithubContext = createContext<IGithubContext | null>(null)
+export const OctokitContext = createContext<IOctokitContext | null>(null)
 
-export const GithubContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const OctokitContextProvider = ({ children }: { children: React.ReactNode }) => {
     const session = useSession()
 
 	const [octokit, setOctokit] = React.useState<Octokit | null>(null)
@@ -43,7 +43,7 @@ export const GithubContextProvider = ({ children }: { children: React.ReactNode 
 		}
 	}, [session])
 
-    const githubContext: IGithubContext = { octokit, username, getOctokit }
+    const octokitContext: IOctokitContext = { octokit, username, getOctokit }
 
-    return <GithubContext.Provider value={githubContext}>{children}</GithubContext.Provider>
+    return <OctokitContext.Provider value={octokitContext}>{children}</OctokitContext.Provider>
 }

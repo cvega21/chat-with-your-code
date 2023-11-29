@@ -1,14 +1,14 @@
 import { Meta } from '@/layouts/Meta'
-import { GithubContextProvider } from '@/contexts/GithubContextProvider'
+import { OctokitContextProvider } from '@/contexts/OctokitContextProvider'
 import { AllRepoMeta } from '@/components/AllRepoMeta'
 
 const Index = () => {
     return (
         <div className='flex min-h-screen min-w-full flex-col items-center'>
             <Meta title='Dev Estimator' description='' />
-            <GithubContextProvider>
-                <AllRepoMeta/>
-            </GithubContextProvider>
+            <OctokitContextProvider>
+                <AllRepoMeta />
+            </OctokitContextProvider>
         </div>
     )
 }

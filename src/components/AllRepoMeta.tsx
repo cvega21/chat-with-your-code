@@ -4,13 +4,13 @@ import { useSession, useUser } from '@supabase/auth-helpers-react'
 import { useEffect, useState } from 'react'
 import { RepoData } from '@/types/Github'
 import { RepoMeta } from '@/components/RepoMeta'
-import { useGithubContext } from '@/hooks/useGithubContext'
+import { useOctokitContext } from '@/hooks/useOctokitContext'
 
 export const AllRepoMeta = () => {
     const user = useUser()
     const session = useSession()
     const [repoData, setRepoData] = useState<RepoData[]>([])
-    const { octokit, username, getOctokit } = useGithubContext()
+    const { octokit, username, getOctokit } = useOctokitContext()
 
     const getRepoInfo = async () => {
         const octokit = await getOctokit()

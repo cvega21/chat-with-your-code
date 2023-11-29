@@ -14,6 +14,7 @@ export const LoginButton = () => {
         if (error) console.log('Error: ', error)
         console.log(data)
 
+        // todo add check if app is installed
         window.open('https://github.com/apps/dev-estimator/installations/new', '_blank');
     }
 
