@@ -35,8 +35,17 @@
             "isBackground": true
         },
         {
+            "label": "docker",
+            "type": "shell",
+            "command": "open -a docker",
+            "problemMatcher": [],
+            "presentation": {
+                "group": "group1"
+            },
+        },
+        {
             "label": "Run All",
-            "dependsOn": ["tsc", "next.js", "supabase"],
+            "dependsOn": ["tsc", "next.js", "supabase", "docker"],
             "group": {
                 "kind": "build",
                 "isDefault": true
