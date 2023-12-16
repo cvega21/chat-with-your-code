@@ -17,6 +17,8 @@ export const OctokitContextProvider = ({ children }: { children: React.ReactNode
     const [username, setUsername] = React.useState<string | null>(null)
 
 	const getOctokit = async (): Promise<Octokit | null> => {
+		if (octokit) return octokit
+		
 		const provider_token = session?.provider_token || localStorage.getItem('provider_token')
 		if (!session) {
 			console.error('no session')
@@ -27,7 +29,6 @@ export const OctokitContextProvider = ({ children }: { children: React.ReactNode
 			console.log({session})
 			return null
 		}
-		if (octokit) return octokit
 		const newOctokit = new Octokit({ auth: session.provider_token })
 		const user = await newOctokit.request('GET /user')
 		setUsername(user.data.login)

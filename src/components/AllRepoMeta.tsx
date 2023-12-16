@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { UsernameReposResponse } from '@/types/Github'
 import { RepoMeta } from '@/components/RepoMeta'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
+import { InstallAppButton } from './InstallAppButton'
 
 export const AllRepoMeta = () => {
     const user = useUser()
@@ -35,6 +36,7 @@ export const AllRepoMeta = () => {
         <div className='mt-16'>
             <p>{user ? <>Logged in as {user.id}</> : <>Not logged in</>}</p>
             <LoginButton />
+            <InstallAppButton/>
             <button onClick={getRepoInfo} className='p-2 border text-white bg-black'>
                 Get all repo info
             </button>

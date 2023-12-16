@@ -18,7 +18,7 @@
   },
   "npm.packageManager": "yarn",
   "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "workbench.colorCustomizations": {
       "activityBar.background": "#2a1633",
