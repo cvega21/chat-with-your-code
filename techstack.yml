@@ -1,11 +1,12 @@
 repo_name: cvega21/ai-saas
-report_id: bea64c46769dfe0421530630165a1e7b
+report_id: 6e5d8315547d79b6a9e549d346191952
+version: 0.1
 repo_type: Public
-timestamp: '2023-12-14T10:23:11+00:00'
+timestamp: '2024-01-05T08:52:15+00:00'
 requested_by: cvega21
 provider: github
 branch: main
-detected_tools_count: 47
+detected_tools_count: 49
 tools:
 - name: CSS 3
   description: The latest evolution of the Cascading Style Sheets language
@@ -15,6 +16,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source_url: https://github.com/cvega21/ai-saas
   detection_source: Repo Metadata
 - name: JavaScript
   description: Lightweight, interpreted, object-oriented language with first-class
@@ -25,6 +27,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source_url: https://github.com/cvega21/ai-saas
   detection_source: Repo Metadata
 - name: SQL
   description: It is a domain-specific language used in programming
@@ -34,6 +37,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/2271/default_068d33483bba6b81ee13fbd4dc7aab9780896a54.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/supabase/seed.sql
   detection_source: supabase/seed.sql
 - name: TypeScript
   description: A superset of JavaScript that compiles to clean JavaScript output
@@ -44,6 +48,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1612/bynNY5dJ.jpg
+  detection_source_url: https://github.com/cvega21/ai-saas
   detection_source: Repo Metadata
 - name: Autoprefixer
   description: PostCSS plugin to parse CSS and add vendor prefixes to CSS rules
@@ -53,6 +58,7 @@ tools:
   category: Languages & Frameworks
   sub_category: CSS Pre-processors / Extensions
   image_url: https://img.stackshare.io/service/2202/72d087642cfce6fef6f2dabec5bf49e8_400x400.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -78,6 +84,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Frameworks (Full Stack)
   image_url: https://img.stackshare.io/service/1011/n1JRsFeB_400x400.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -90,6 +97,7 @@ tools:
   category: Languages & Frameworks
   sub_category: CSS Pre-processors / Extensions
   image_url: https://img.stackshare.io/service/3339/rlFcjEdI.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -116,6 +124,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Front-End Frameworks
   image_url: https://img.stackshare.io/service/8158/default_660b7c41c3ba489cb581eec89c04655404258c19.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -128,6 +137,7 @@ tools:
   category: Application Hosting
   sub_category: Realtime Backend / API
   image_url: https://img.stackshare.io/service/12323/Z_q3YLKR_400x400.jpg
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-11-22 08:14:23.000000000 Z
@@ -140,6 +150,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Code Review
   image_url: https://img.stackshare.io/service/3337/Q4L7Jncy.jpg
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/.eslintrc
   detection_source: ".eslintrc"
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -151,6 +162,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/cvega21/ai-saas
   detection_source: Repo Metadata
 - name: Jest
   description: Painless JavaScript Unit Testing
@@ -174,6 +186,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Tools for GitHub
   image_url: https://img.stackshare.io/service/9827/octokit-dotnet_2.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-11-20 08:39:38.000000000 Z
@@ -200,6 +213,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Text Editor
   image_url: https://img.stackshare.io/service/4202/Visual_Studio_Code_logo.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/.vscode/tasks.json
   detection_source: ".vscode/tasks.json"
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -211,6 +225,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Front End Package Manager
   image_url: https://img.stackshare.io/service/5848/44mC-kJ3.jpg
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/yarn.lock
   detection_source: yarn.lock
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -222,6 +237,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Front End Package Manager
   image_url: https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -258,6 +274,7 @@ tools:
   open_source: false
   hosted_saas: false
   image_url: https://img.stackshare.io/service/6612/ehMiE-wz_normal.jpg
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -267,6 +284,7 @@ tools:
   open_source: false
   hosted_saas: false
   image_url: https://img.stackshare.io/service/48327/default_e1e547104832f8e187369b19e928e17a8be5020b.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
@@ -275,6 +293,7 @@ tools:
   open_source: false
   hosted_saas: false
   image_url: https://img.stackshare.io/service/10577/11071.jpeg
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/package.json
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-11-22 08:14:23.000000000 Z
@@ -387,6 +406,20 @@ tools:
   category: Libraries
   sub_category: npm Packages
   image_url: https://img.stackshare.io/package/15828/default_14fd11531839d935f920b6d55bd6f3528c890ad7.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/yarn.lock
+  detection_source: package.json
+  last_updated_by: Christian Vega-Munguia
+  last_updated_on: 2023-09-10 11:56:32.000000000 Z
+- name: cssnano
+  description: A modular minifier, built on top of the PostCSS ecosystem
+  package_url: https://www.npmjs.com/cssnano
+  version: 6.0.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16102/default_efe4f0184d007a28e793d89a59e058b742bc9177.png
   detection_source_url: https://github.com/cvega21/ai-saas/blob/main/yarn.lock
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
@@ -531,6 +564,20 @@ tools:
   detection_source: package.json
   last_updated_by: Christian Vega-Munguia
   last_updated_on: 2023-09-10 11:56:32.000000000 Z
+- name: lint-staged
+  description: Lint files staged by git
+  package_url: https://www.npmjs.com/lint-staged
+  version: 13.2.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15868/default_e0a4fb1126d7400f419f0931cf1669947a5bc552.png
+  detection_source_url: https://github.com/cvega21/ai-saas/blob/main/yarn.lock
+  detection_source: package.json
+  last_updated_by: Christian Vega-Munguia
+  last_updated_on: 2023-11-22 08:14:23.000000000 Z
 - name: npm-run-all
   description: A CLI tool to run multiple npm-scripts in parallel or sequential
   package_url: https://www.npmjs.com/npm-run-all
