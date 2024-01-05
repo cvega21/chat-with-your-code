@@ -58,7 +58,7 @@ Full tech stack [here](/techstack.md)
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [cvega21/ai-saas](https://github.com/cvega21/ai-saas)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|47<br/>Tools used|12/14/23 <br/>Report generated|
+|49<br/>Tools used|01/05/24 <br/>Report generated|
 |------|------|
 </div>
 
@@ -280,9 +280,9 @@ Full tech stack [here](/techstack.md)
 </table>
 
 
-## <img src='https://img.stackshare.io/group.svg' /> Open source packages (23)</h2>
+## <img src='https://img.stackshare.io/group.svg' /> Open source packages (25)</h2>
 
-## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (23)
+## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (25)
 
 |NAME|VERSION|LAST UPDATED|LAST UPDATED BY|LICENSE|VULNERABILITIES|
 |:------|:------|:------|:------|:------|:------|
@@ -294,6 +294,7 @@ Full tech stack [here](/techstack.md)
 |[@typescript-eslint/eslint-plugin](https://www.npmjs.com/@typescript-eslint/eslint-plugin)|v5.60.0|11/20/23|Christian Vega-Munguia |MIT|N/A|
 |[@typescript-eslint/parser](https://www.npmjs.com/@typescript-eslint/parser)|v5.60.0|11/20/23|Christian Vega-Munguia |BSD-2-Clause|N/A|
 |[cross-env](https://www.npmjs.com/cross-env)|v7.0.3|09/10/23|Christian Vega-Munguia |MIT|N/A|
+|[cssnano](https://www.npmjs.com/cssnano)|v6.0.1|09/10/23|Christian Vega-Munguia |MIT|N/A|
 |[eslint-config-airbnb](https://www.npmjs.com/eslint-config-airbnb)|v19.0.4|09/10/23|Christian Vega-Munguia |MIT|N/A|
 |[eslint-config-prettier](https://www.npmjs.com/eslint-config-prettier)|v8.8.0|11/20/23|Christian Vega-Munguia |MIT|N/A|
 |[eslint-plugin-import](https://www.npmjs.com/eslint-plugin-import)|v2.27.5|09/10/23|Christian Vega-Munguia |MIT|N/A|
@@ -304,6 +305,7 @@ Full tech stack [here](/techstack.md)
 |[eslint-plugin-react-hooks](https://www.npmjs.com/eslint-plugin-react-hooks)|v4.6.0|11/14/23|Christian Vega-Munguia |MIT|N/A|
 |[http-server](https://www.npmjs.com/http-server)|v14.1.1|09/10/23|Christian Vega-Munguia |MIT|N/A|
 |[jest-environment-jsdom](https://www.npmjs.com/jest-environment-jsdom)|v29.5.0|09/10/23|Christian Vega-Munguia |MIT|N/A|
+|[lint-staged](https://www.npmjs.com/lint-staged)|v13.2.2|11/22/23|Christian Vega-Munguia |MIT|N/A|
 |[npm-run-all](https://www.npmjs.com/npm-run-all)|v4.1.5|09/10/23|Christian Vega-Munguia |MIT|N/A|
 |[openai-edge](https://www.npmjs.com/openai-edge)|v1.1.0|09/10/23|Christian Vega-Munguia |N/A|N/A|
 |[react-dom](https://www.npmjs.com/react-dom)|v18.2.0|11/14/23|Christian Vega-Munguia |MIT|N/A|
