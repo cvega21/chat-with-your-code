@@ -1,5 +1,5 @@
 import React from 'react'
-import { UsernameReposResponse, GithubFile } from '@/types/Github'
+import { UsernameReposResponse, GithubFile, RepoContentsResponse } from '@/types/Github'
 import { Tag } from './Tag'
 import { getLanguageColor } from '@/utils/styles'
 import { BasicButton } from './BasicButton'
@@ -11,7 +11,7 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
     const { login: ownerName, avatar_url } = owner
     const { bgColor, textColor } = getLanguageColor(language ?? '')
     const { getOctokit } = useOctokitContext()
-    const [files, setFiles] = React.useState<GithubFile[]>([])
+    const [files, setFiles] = React.useState<RepoContentsResponse>([])
 
     const getRepoContent = async () => {
         console.debug('getRepoContent', repo)
@@ -27,8 +27,7 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
             },
         })
 
-        console.log(repoContent)
-
+        console.log(repoContent.data)
         if (Array.isArray(repoContent.data)) {
             const githubFiles = repoContent.data.map(file => {
                 const { name, size, type, path } = file
@@ -37,13 +36,17 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
                     size,
                     type,
                     path,
-                } as GithubFile
+                }
             })
-            setFiles(githubFiles)
+            setFiles(repoContent.data)
         } else {
             const singleFile = repoContent.data
             setFiles([singleFile])
         }
+    }
+
+    const loadToVectorDB = async () => {
+        // send API request to load entire repo to vector DB
     }
 
     return (
@@ -60,11 +63,14 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
                 </a>
                 {fork && <Tag text='Forked' />}
                 <BasicButton text={'Get Files'} onClick={getRepoContent} />
+                {/* <BasicButton text={'Load to Vector DB'} onClick={loadToVectorDB} /> */}
             </div>
             <p className='italic font-light text-stone-500'>{visibility}</p>
             <p className='font-light'>{description}</p>
             {language && <Tag text={language} bgColor={bgColor} textColor={textColor} />}
-            {files.length > 0 && <GithubFilesPanel files={files} />}
+            {Array.isArray(files) && files.length > 0 && (
+                <GithubFilesPanel files={files} ownerName={ownerName} repoName={repo.name} />
+            )}
         </div>
     )
 }

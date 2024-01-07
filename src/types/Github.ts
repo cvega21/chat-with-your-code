@@ -10,5 +10,6 @@ export type GithubFile = {
     size: number
     name: string
     path: string
+    content?: string
 }
 export type RepoLanguage = 'TypeScript' | 'JavaScript' | 'Python' | 'Jupyter Notebook'
