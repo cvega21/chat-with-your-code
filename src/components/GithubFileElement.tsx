@@ -3,12 +3,26 @@ import { GithubFile } from '@/types/Github'
 import React, { useEffect } from 'react'
 import { BasicButton } from './BasicButton'
 
-export const GithubFileElement = ({ file, ownerName, repoName }: { file: GithubFile; ownerName: string; repoName: string }) => {
-    const { name, size, type, path, content } = file
+export const GithubFileElement = ({
+    file,
+    ownerName,
+    repoName,
+}: {
+    file: GithubFile
+    ownerName: string
+    repoName: string
+}) => {
+    const { name, size, type, path } = file
     const [fileContent, setFileContent] = React.useState<string | null>(null)
     const { getOctokit } = useOctokitContext()
 
-    const loadToVectorDB = async () => {}
+    const loadToVectorDB = async () => {
+        const res = await fetch('/api/loadToVectorDb', {
+            method: 'POST',
+            body: JSON.stringify({ fileName: name, content: fileContent }),
+        })
+
+    }
 
     const getFile = async () => {
         const octokit = await getOctokit()
