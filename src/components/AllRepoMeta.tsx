@@ -17,7 +17,7 @@ export const AllRepoMeta = () => {
         const octokit = await getOctokit()
         if (!octokit) return console.error('no octokit')
         if (!username) return console.error('no username')
-        console.log({ session })
+        // console.log({ session })
         const repos = await octokit.request('GET /users/{username}/repos', {
             username,
             headers: {
@@ -29,11 +29,11 @@ export const AllRepoMeta = () => {
     }
 
     useEffect(() => {
-        if (session) {
+        if (session && username && userReposMeta.length === 0) {
             console.log('Getting repo info')
             getRepoInfo()
         }
-    }, [])
+    }, [session, username])
 
     return (
         <div className='mt-16'>

@@ -35,7 +35,7 @@ export const InstallAppButton = () => {
     useEffect(() => {
         if (isInstalled) return
         if (session) checkForInstall()
-    }, [username])
+    }, [session])
 
     return (
         <button

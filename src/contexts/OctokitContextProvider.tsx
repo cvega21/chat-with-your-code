@@ -19,7 +19,9 @@ export const OctokitContextProvider = ({ children }: { children: React.ReactNode
 
 	const getOctokit = async (): Promise<Octokit> => {
 		console.log('Getting octokit...')
-		if (octokit) return octokit
+		if (octokit) {
+			return octokit
+		}
 
 		const provider_token = session?.provider_token || localStorage.getItem('provider_token')
 		if (!session) {
