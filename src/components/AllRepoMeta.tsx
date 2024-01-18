@@ -29,7 +29,10 @@ export const AllRepoMeta = () => {
     }
 
     useEffect(() => {
-        getRepoInfo()
+        if (session) {
+            console.log('Getting repo info')
+            getRepoInfo()
+        }
     }, [])
 
     return (

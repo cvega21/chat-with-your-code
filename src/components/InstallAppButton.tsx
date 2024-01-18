@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect } from 'react'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
+import { useSession } from '@supabase/auth-helpers-react'
 
 export const InstallAppButton = () => {
     const { getOctokit, username } = useOctokitContext()
     const [isInstalled, setIsInstalled] = React.useState<boolean>(false)
+    const session = useSession()
 
     const checkForInstall = useCallback(async () => {
         const octokit = await getOctokit()
@@ -32,7 +34,7 @@ export const InstallAppButton = () => {
 
     useEffect(() => {
         if (isInstalled) return
-        checkForInstall()
+        if (session) checkForInstall()
     }, [username])
 
     return (

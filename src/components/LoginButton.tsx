@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react'
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
+import { createBrowserClient } from '@supabase/ssr'
 
 export const LoginButton = () => {
-    const supabase = useSupabaseClient()
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    )
+
     const user = useUser()
 
     const signInWithGithub = async () => {
