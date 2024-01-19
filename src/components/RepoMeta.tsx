@@ -5,6 +5,8 @@ import { getLanguageColor } from '@/utils/styles'
 import { BasicButton } from './BasicButton'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
 import { GithubFilesPanel } from './GithubFilesPanel'
+import { callApi } from '@/utils/callApi'
+import { useSession } from '@supabase/auth-helpers-react'
 
 export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
     const { name, fork, description, html_url, visibility, owner, language } = repo
@@ -12,6 +14,7 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
     const { bgColor, textColor } = getLanguageColor(language ?? '')
     const { getOctokit } = useOctokitContext()
     const [files, setFiles] = React.useState<RepoContentsResponse>([])
+    const session = useSession()
 
     const getRepoContent = async () => {
         console.debug('getRepoContent', repo)
@@ -47,6 +50,12 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
 
     const loadToVectorDB = async () => {
         // send API request to load entire repo to vector DB
+        console.log({repo})
+        if (!session?.provider_token) return console.error('no provider token')
+        await callApi('loadToVectorDb', {
+            provider_token: session.provider_token,
+            repoName: repo.name,
+        })
     }
 
     return (
@@ -63,7 +72,7 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
                 </a>
                 {fork && <Tag text='Forked' />}
                 <BasicButton text={'Get Files'} onClick={getRepoContent} />
-                {/* <BasicButton text={'Load to Vector DB'} onClick={loadToVectorDB} /> */}
+                <BasicButton text={'Load to Vector DB'} onClick={loadToVectorDB} />
             </div>
             <p className='italic font-light text-stone-500'>{visibility}</p>
             <p className='font-light'>{description}</p>

@@ -42,18 +42,6 @@ export const AllRepoMeta = () => {
             <p>{user ? <>Logged in as {user.id}</> : <>Not logged in</>}</p>
             <LoginButton />
             <InstallAppButton />
-            <BasicButton
-                text='test API'
-                onClick={async () => {
-                    const res = await callApi('loadToVectorDb', {
-                        provider_token: 'fake_token',
-                        repoName: 'dev-estimator',
-                    })
-                    const data = res.data
-                    console.log(data)
-                    window.alert(data)
-                }}
-            />
             <button onClick={getRepoInfo} className='p-2 border text-white bg-black'>
                 Get all repo info
             </button>

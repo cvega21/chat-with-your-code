@@ -1,3 +1,5 @@
+import { GithubFile } from './Github'
+
 export type TestReqBody = {
     test: string
     title: string
@@ -16,6 +18,15 @@ export interface ServerRoutesMeta {
             repoName: string
         }
         res: APIResponse<string>
+    }
+    loadFileToVectorDb: {
+        args: {
+            owner: string
+            repoName: string
+            path: string
+            provider_token: string
+        }
+        res: APIResponse<GithubFile>
     }
 }
 

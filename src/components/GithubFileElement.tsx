@@ -1,5 +1,7 @@
 import { useOctokitContext } from '@/hooks/useOctokitContext'
 import { GithubFile } from '@/types/Github'
+import { callApi } from '@/utils/callApi'
+import { useSession } from '@supabase/auth-helpers-react'
 import React, { useEffect } from 'react'
 import { BasicButton } from './BasicButton'
 
@@ -15,13 +17,19 @@ export const GithubFileElement = ({
     const { name, size, type, path } = file
     const [fileContent, setFileContent] = React.useState<string | null>(null)
     const { getOctokit } = useOctokitContext()
+    const session = useSession()
 
     const loadToVectorDB = async () => {
-        const res = await fetch('/api/loadToVectorDb', {
-            method: 'POST',
-            body: JSON.stringify({ fileName: name, content: fileContent }),
+        if (!session?.provider_token) {
+            console.log({session})
+            return console.error('no provider token')
+        }
+        const res = await callApi('loadFileToVectorDb', {
+            provider_token: session.provider_token,
+            repoName,
+            owner: ownerName,
+            path,
         })
-
     }
 
     const getFile = async () => {

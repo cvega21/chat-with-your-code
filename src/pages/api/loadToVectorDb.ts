@@ -1,4 +1,4 @@
-import { ServerRoutesRes } from '@/types/api'
+import { ServerRoutesArgs, ServerRoutesRes } from '@/types/api'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { openai, supabase } from './lib/singletons'
 
@@ -6,6 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (req.method !== 'POST') {
         return res.status(405).json({ result: 'failure', error: 'Method not allowed' })
     }
+    const { provider_token, repoName } = req.body as ServerRoutesArgs['loadToVectorDb']
+    
     return res.status(200).json({ result: 'success', data: 'hello world' })
     // const parsed = JSON.parse(req.body)
     // const { fileName, content } = parsed
