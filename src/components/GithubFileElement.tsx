@@ -29,6 +29,7 @@ export const GithubFileElement = ({
             repoName,
             owner: ownerName,
             path,
+            fileName: name,
         })
     }
 

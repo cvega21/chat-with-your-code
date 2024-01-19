@@ -11,5 +11,7 @@ export type GithubFile = {
     name: string
     path: string
     content?: string
+    repoName?: string
+    data?: string
 }
 export type RepoLanguage = 'TypeScript' | 'JavaScript' | 'Python' | 'Jupyter Notebook'

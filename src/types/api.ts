@@ -21,6 +21,7 @@ export interface ServerRoutesMeta {
     }
     loadFileToVectorDb: {
         args: {
+            fileName: string
             owner: string
             repoName: string
             path: string
