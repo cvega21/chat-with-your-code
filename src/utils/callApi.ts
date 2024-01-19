@@ -8,9 +8,10 @@ export async function callApi<K extends keyof ServerRoutes>(
     const route = `/api/${method}`
     const res = await fetch(route, {
         method: 'POST',
-        ...args,
+        body: JSON.stringify(args),
     })
 
-    console.debug(`${method} Response`, res)
-    return res.json() as Promise<ServerRoutesRes[K]>
+    const data = await res.json() as ServerRoutesRes[K]
+    console.debug(`${method} Response`, data)
+    return data
 }
