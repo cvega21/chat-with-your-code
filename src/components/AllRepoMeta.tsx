@@ -6,6 +6,8 @@ import { UsernameReposResponse } from '@/types/Github'
 import { RepoMeta } from '@/components/RepoMeta'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
 import { InstallAppButton } from './InstallAppButton'
+import { BasicButton } from './BasicButton'
+import { callApi } from '@/utils/callApi'
 
 export const AllRepoMeta = () => {
     const user = useUser()
@@ -39,7 +41,19 @@ export const AllRepoMeta = () => {
         <div className='mt-16'>
             <p>{user ? <>Logged in as {user.id}</> : <>Not logged in</>}</p>
             <LoginButton />
-            <InstallAppButton/>
+            <InstallAppButton />
+            <BasicButton
+                text='test API'
+                onClick={async () => {
+                    const res = await callApi('loadToVectorDb', {
+                        provider_token: 'fake_token',
+                        repoName: 'dev-estimator',
+                    })
+                    const data = res.data
+                    console.log(data)
+                    window.alert(data)
+                }}
+            />
             <button onClick={getRepoInfo} className='p-2 border text-white bg-black'>
                 Get all repo info
             </button>
