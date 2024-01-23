@@ -19,6 +19,11 @@ export default async function handler(
     if (Array.isArray(file)) {
         return res.status(500).json({ result: 'failure', error: 'File is directory' })
     }
+    const fileExists = await checkIfFileExists({ owner, repoName, path, fileName })
+    if (fileExists) {
+        return res.status(500).json({ result: 'failure', error: 'File already loaded' })
+    }
+
     await insertFile({
         owner,
         repoName,
@@ -86,4 +91,25 @@ const insertFile = async ({
     }
 
     return
+}
+
+const checkIfFileExists = async ({
+    owner,
+    repoName,
+    path,
+    fileName,
+}: {
+    owner: string
+    repoName: string
+    path: string
+    fileName: string
+}) => {
+    const { data: files } = await supabase
+        .from('code_embeddings')
+        .select('file_name')
+        .eq('owner', owner)
+        .eq('repo_name', repoName)
+        .eq('path', path)
+        .eq('file_name', fileName)
+    return files && files.length > 0
 }
