@@ -14,8 +14,9 @@ export type APIResponse<T = unknown> = {
 export interface ServerRoutesMeta {
     loadToVectorDb: {
         args: {
-            provider_token: string
+            owner: string
             repoName: string
+            provider_token: string
         }
         res: APIResponse<string>
     }
@@ -27,7 +28,7 @@ export interface ServerRoutesMeta {
             path: string
             provider_token: string
         }
-        res: APIResponse<GithubFile>
+        res: APIResponse<string>
     }
 }
 

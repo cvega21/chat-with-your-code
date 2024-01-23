@@ -55,6 +55,7 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
         await callApi('loadToVectorDb', {
             provider_token: session.provider_token,
             repoName: repo.name,
+            owner: ownerName,
         })
     }
 

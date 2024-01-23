@@ -15,8 +15,8 @@ export default async function handler(
     const { provider_token, repoName, path, owner, fileName } =
         parsed as ServerRoutesArgs['loadFileToVectorDb']
     const octokit = new Octokit({ auth: provider_token })
-    const file = await getFile(octokit, { repoName, path, owner, provider_token, fileName })
-    if (Array.isArray(file)) {
+    const fileContent = await getFileContent({octokit, repoName, path, owner })
+    if (Array.isArray(fileContent)) {
         return res.status(500).json({ result: 'failure', error: 'File is directory' })
     }
     const fileExists = await checkIfFileExists({ owner, repoName, path, fileName })
@@ -29,15 +29,24 @@ export default async function handler(
         repoName,
         path,
         fileName,
-        fileContent: file.data as string,
+        fileContent,
     })
-    return res.status(200).json({ result: 'success', data: file })
+    return res.status(200).json({ result: 'success', data: fileContent })
 }
 
-const getFile = async (octokit: Octokit, args: ServerRoutesArgs['loadFileToVectorDb']) => {
-    console.log('Getting file')
+export const getFileContent = async ({
+    octokit,
+    repoName,
+    path,
+    owner,
+}: {
+    octokit: Octokit
+    repoName: string
+    path: string
+    owner: string
+}) => {
+    console.log(`Getting file ${path} from ${repoName} for ${owner}`)
     // console.log({ args })
-    const { repoName, path, owner } = args
     const file = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
         owner,
         repo: repoName,
@@ -46,11 +55,11 @@ const getFile = async (octokit: Octokit, args: ServerRoutesArgs['loadFileToVecto
             format: 'raw',
         },
     })
-    // console.log({file})
-    return file as unknown as GithubFile
+    console.log({file})
+    return file.data as unknown as string
 }
 
-const insertFile = async ({
+export const insertFile = async ({
     owner,
     repoName,
     path,
@@ -63,6 +72,12 @@ const insertFile = async ({
     fileName: string
     fileContent: string
 }) => {
+    console.log(`Inserting file ${fileName} into DB`)
+    console.log({ owner, repoName, path, fileName, fileContent })
+    if (!fileContent) {
+        console.error(`File ${fileName} has no content`)
+        return
+    }
     const input = (fileContent as string).replace(/\s+/g, ' ')
 
     const embeddingResponse = await openai.embeddings.create({
@@ -93,7 +108,7 @@ const insertFile = async ({
     return
 }
 
-const checkIfFileExists = async ({
+export const checkIfFileExists = async ({
     owner,
     repoName,
     path,
@@ -111,5 +126,7 @@ const checkIfFileExists = async ({
         .eq('repo_name', repoName)
         .eq('path', path)
         .eq('file_name', fileName)
-    return files && files.length > 0
+    const fileExists = files && files.length > 0
+    console.log(`File ${fileName} exists: ${fileExists}`)
+    return fileExists
 }
