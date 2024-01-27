@@ -12,7 +12,7 @@ export type APIResponse<T = unknown> = {
 }
 
 export interface ServerRoutesMeta {
-    loadToVectorDb: {
+    loadRepoToVectorDb: {
         args: {
             owner: string
             repoName: string
@@ -30,6 +30,20 @@ export interface ServerRoutesMeta {
         }
         res: APIResponse<string>
     }
+    getReposInDb: {
+        args: {
+            owner: string
+        }
+        res: APIResponse<string[]>
+    }
+}
+
+export type ServerMethod = 'POST' | 'GET'
+
+export const ServerMethodMapping: Record<keyof ServerRoutes, ServerMethod> = {
+    loadRepoToVectorDb: 'POST',
+    loadFileToVectorDb: 'POST',
+    getReposInDb: 'POST',
 }
 
 export type ServerRoutesArgs = {

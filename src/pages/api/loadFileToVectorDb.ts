@@ -1,4 +1,4 @@
-import { ServerRoutesArgs, ServerRoutesRes } from '@/types/api'
+import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
 import { GithubFile } from '@/types/Github'
 import { Octokit } from '@octokit/core'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -15,7 +15,7 @@ export default async function handler(
     const { provider_token, repoName, path, owner, fileName } =
         parsed as ServerRoutesArgs['loadFileToVectorDb']
     const octokit = new Octokit({ auth: provider_token })
-    const fileContent = await getFileContent({octokit, repoName, path, owner })
+    const fileContent = await getFileContent({ octokit, repoName, path, owner })
     if (Array.isArray(fileContent)) {
         return res.status(500).json({ result: 'failure', error: 'File is directory' })
     }
@@ -55,7 +55,7 @@ export const getFileContent = async ({
             format: 'raw',
         },
     })
-    console.log({file})
+    console.log({ file })
     return file.data as unknown as string
 }
 

@@ -14,6 +14,7 @@ export const AllRepoMeta = () => {
     const session = useSession()
     const [userReposMeta, setUserReposMeta] = useState<UsernameReposResponse[]>([])
     const { octokit, username, getOctokit } = useOctokitContext()
+    const [reposInDb, setReposInDb] = useState<string[]>([])
 
     const getRepoInfo = async () => {
         const octokit = await getOctokit()
@@ -30,10 +31,17 @@ export const AllRepoMeta = () => {
         console.log({ repos })
     }
 
+    const getReposInDb = async () => {
+        const loadedRepos = await callApi('getReposInDb', { owner: username ?? '' })
+        console.log({ loadedRepos })
+        setReposInDb(loadedRepos.data!)
+    }
+
     useEffect(() => {
         if (session && username && userReposMeta.length === 0) {
             console.log('Getting repo info')
             getRepoInfo()
+            getReposInDb()
         }
     }, [session, username])
 
@@ -45,10 +53,26 @@ export const AllRepoMeta = () => {
             <button onClick={getRepoInfo} className='p-2 border text-white bg-black'>
                 Get all repo info
             </button>
-            {userReposMeta &&
-                userReposMeta.map(repo => {
-                    return <RepoMeta repo={repo} key={repo.url} />
-                })}
+            <section className='my-4 bg-stone-900 p-6 rounded-xl border border-stone-600'>
+                <h2 className='text-2xl font-bold'>Repos in Vector DB</h2>
+                <p className='font-light'>Click on a repository to begin a chat session.</p>
+                {userReposMeta &&
+                    userReposMeta
+                        .filter(repo => reposInDb.includes(repo.name))
+                        .map(repo => {
+                            return <RepoMeta repo={repo} key={repo.url} loaded={true} />
+                        })}
+            </section>
+            <section className='my-4 bg-stone-900 p-6 rounded-xl border border-stone-600'>
+                <h2 className='text-2xl font-bold'>Repos Not Loaded</h2>
+                <p className='font-light'>Click on a repository to begin a chat session.</p>
+                {userReposMeta &&
+                    userReposMeta
+                    .filter(repo => !reposInDb.includes(repo.name))
+                    .map(repo => {
+                        return <RepoMeta repo={repo} key={repo.url} loaded={false} />
+                    })}
+            </section>
         </div>
     )
 }

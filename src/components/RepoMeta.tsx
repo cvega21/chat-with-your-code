@@ -8,7 +8,7 @@ import { GithubFilesPanel } from './GithubFilesPanel'
 import { callApi } from '@/utils/callApi'
 import { useSession } from '@supabase/auth-helpers-react'
 
-export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
+export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded: boolean }) => {
     const { name, fork, description, html_url, visibility, owner, language } = repo
     const { login: ownerName, avatar_url } = owner
     const { bgColor, textColor } = getLanguageColor(language ?? '')
@@ -48,11 +48,11 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
         }
     }
 
-    const loadToVectorDB = async () => {
+    const loadRepoToVectorDB = async () => {
         // send API request to load entire repo to vector DB
-        console.log({repo})
+        console.log({ repo })
         if (!session?.provider_token) return console.error('no provider token')
-        await callApi('loadToVectorDb', {
+        await callApi('loadRepoToVectorDb', {
             provider_token: session.provider_token,
             repoName: repo.name,
             owner: ownerName,
@@ -72,8 +72,16 @@ export const RepoMeta = ({ repo }: { repo: UsernameReposResponse }) => {
                     {name}
                 </a>
                 {fork && <Tag text='Forked' />}
-                <BasicButton text={'Get Files'} onClick={getRepoContent} />
-                <BasicButton text={'Load to Vector DB'} onClick={loadToVectorDB} />
+                {!loaded ? (
+                    <>
+                        <BasicButton text={'Get Files'} onClick={getRepoContent} />
+                        <BasicButton text={'Load to Vector DB'} onClick={loadRepoToVectorDB} />
+                    </>
+                ) : (
+                    <>
+                        <BasicButton text={'Begin Chat'} onClick={loadRepoToVectorDB} />
+                    </>
+                )}
             </div>
             <p className='italic font-light text-stone-500'>{visibility}</p>
             <p className='font-light'>{description}</p>

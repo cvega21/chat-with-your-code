@@ -1,4 +1,4 @@
-import { ServerRoutesArgs, ServerRoutesRes } from '@/types/api'
+import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { openai, supabase } from './lib/singletons'
 import { Octokit } from '@octokit/core'
@@ -7,14 +7,14 @@ import { GithubFile } from '@/types/Github'
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ServerRoutesRes['loadToVectorDb']>
+    res: NextApiResponse<ServerRoutesRes['loadRepoToVectorDb']>
 ) {
     if (req.method !== 'POST') {
         return res.status(405).json({ result: 'failure', error: 'Method not allowed' })
     }
 
     const parsed = JSON.parse(req.body)
-    const { provider_token, repoName, owner } = parsed as ServerRoutesArgs['loadToVectorDb']
+    const { provider_token, repoName, owner } = parsed as ServerRoutesArgs['loadRepoToVectorDb']
     console.log(`Loading repository: ${repoName} for ${owner}`)
     const octokit = new Octokit({ auth: provider_token })
 
@@ -63,7 +63,7 @@ const getAllFilesInRepo = async (octokit: Octokit, owner: string, repo: string) 
         repo,
         mediaType: {
             format: 'raw',
-        }
+        },
     })
 
     if (Array.isArray(response.data)) {
@@ -104,6 +104,6 @@ const getAllFilesInRepo = async (octokit: Octokit, owner: string, repo: string) 
 }
 
 const isExcludedFileType = (fileName: string) => {
-    const excludedExtensions = ['.png', '.svg', '.jpg', '.gif', '.ico', '.lock'];
-    return excludedExtensions.some(ext => fileName.endsWith(ext));
-};
+    const excludedExtensions = ['.png', '.svg', '.jpg', '.gif', '.ico', '.lock']
+    return excludedExtensions.some(ext => fileName.endsWith(ext))
+}
