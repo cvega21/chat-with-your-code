@@ -26,9 +26,11 @@ export const OctokitContextProvider = ({ children }: { children: React.ReactNode
 		}
 
 		const provider_token = session?.provider_token
-		if (!session) {
+		if (!session ) {
 			console.error('no session')
-			throw new Error('no session')
+			console.log({isLoading})
+			return new Octokit() // unauthenticated octokit
+			// throw new Error('no session')
 			// return null
 		}
 		if (!provider_token) {

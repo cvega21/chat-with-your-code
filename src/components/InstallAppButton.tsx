@@ -10,6 +10,9 @@ export const InstallAppButton = () => {
     const checkForInstall = useCallback(async () => {
         const octokit = await getOctokit()
         if (!octokit) return console.error('no octokit')
+        console.log({octokit})
+        const auth = await octokit.auth() as any
+        if (auth?.type === 'unauthenticated') return console.error('no auth')
         const installs = await octokit.request('GET /user/installations', {
             headers: {
                 'X-GitHub-Api-Version': '2022-11-28',
