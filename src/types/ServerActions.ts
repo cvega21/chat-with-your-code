@@ -1,3 +1,4 @@
+import { ChatDetails } from './Chat'
 import { GithubFile } from './Github'
 
 export type TestReqBody = {
@@ -36,6 +37,19 @@ export interface ServerRoutesMeta {
         }
         res: APIResponse<string[]>
     }
+    startNewChat: {
+        args: {
+            owner: string
+            repoName: string
+        }
+        res: APIResponse<number>
+    }
+    getChatDetails: {
+        args: {
+            chatId: number
+        }
+        res: APIResponse<ChatDetails>
+    }
 }
 
 export type ServerMethod = 'POST' | 'GET'
@@ -44,6 +58,8 @@ export const ServerMethodMapping: Record<keyof ServerRoutes, ServerMethod> = {
     loadRepoToVectorDb: 'POST',
     loadFileToVectorDb: 'POST',
     getReposInDb: 'POST',
+    startNewChat: 'POST',
+    getChatDetails: 'POST',
 }
 
 export type ServerRoutesArgs = {

@@ -7,6 +7,8 @@ import { useOctokitContext } from '@/hooks/useOctokitContext'
 import { GithubFilesPanel } from './GithubFilesPanel'
 import { callApi } from '@/utils/callApi'
 import { useSession } from '@supabase/auth-helpers-react'
+import { useRouter } from 'next/router'
+import { toast } from 'react-hot-toast'
 
 export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded: boolean }) => {
     const { name, fork, description, html_url, visibility, owner, language } = repo
@@ -15,6 +17,7 @@ export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded
     const { getOctokit } = useOctokitContext()
     const [files, setFiles] = React.useState<RepoContentsResponse>([])
     const session = useSession()
+    const router = useRouter()
 
     const getRepoContent = async () => {
         console.debug('getRepoContent', repo)
@@ -59,6 +62,19 @@ export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded
         })
     }
 
+    const startNewChat = async () => {
+        // send API request to start a new chat
+        const { data: chatId } = await callApi('startNewChat', {
+            repoName: repo.name,
+            owner: ownerName,
+        })
+        console.log({ chatId })
+        if (!chatId) return toast.error('Error starting chat')
+
+        router.push(`/chat/${chatId}`)
+        return chatId
+    }
+
     return (
         <div className='border-b border-black py-2'>
             <div className='flex gap-4 items-center'>
@@ -79,7 +95,7 @@ export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded
                     </>
                 ) : (
                     <>
-                        <BasicButton text={'Begin Chat'} onClick={loadRepoToVectorDB} />
+                        <BasicButton text={'Begin Chat'} onClick={startNewChat} />
                     </>
                 )}
             </div>
