@@ -18,6 +18,12 @@ export default async function handler(
     console.log(`Loading repository: ${repoName} for ${owner}`)
     const octokit = new Octokit({ auth: provider_token })
 
+    const repoExists = await checkIfRepoIsLoaded(owner, repoName)
+    if (repoExists) {
+        console.log('Repo already loaded')
+        return res.status(200).json({ result: 'success', data: 'Repo already loaded' })
+    }
+
     try {
         // Retrieve all files from the repository
         const files = await getAllFilesInRepo(octokit, owner, repoName)
@@ -106,4 +112,14 @@ const getAllFilesInRepo = async (octokit: Octokit, owner: string, repo: string) 
 const isExcludedFileType = (fileName: string) => {
     const excludedExtensions = ['.png', '.svg', '.jpg', '.gif', '.ico', '.lock']
     return excludedExtensions.some(ext => fileName.endsWith(ext))
+}
+
+export const checkIfRepoIsLoaded = async (owner: string, repoName: string) => {
+    const repo = await supabase
+        .from('distinct_repo')
+        .select('repo_name')
+        .eq('owner', owner)
+        .eq('repo_name', repoName)
+
+    return repo.data !== null
 }
