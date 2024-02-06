@@ -12,3 +12,18 @@ create table
 
 create view distinct_repo as
   select distinct owner, repo_name from public.code_embeddings;
+
+create table
+  user_chat (
+    id serial primary key,
+    owner text not null,
+    repo_name text not null
+  );
+
+create table
+  user_chat_messages (
+    id serial,
+    user_chat_id integer not null REFERENCES user_chat(id),
+    message text not null,
+    created_at timestamp not null
+  );
