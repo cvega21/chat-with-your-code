@@ -5,23 +5,10 @@ import { callApi } from '@/utils/callApi'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { GetServerSideProps, NextPageContext } from 'next'
 
-export default function UserChat() {
-    const router = useRouter()
-    console.log({ router })
-    const [chatDetails, setChatDetails] = useState<ChatDetails | null>(null)
-
-    useEffect(() => {
-        const chatId = parseInt(router.query.chatId as string)
-        console.log(chatId)
-        callApi('getChatDetails', { chatId }).then(res => {
-            console.log({ res })
-            if (!res.data) return toast.error('No chat found')
-            setChatDetails(res.data)
-            return res.data
-        })
-    }, [])
-
+export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) {
+    console.log({chatDetails})
     const owner = chatDetails?.owner
     const repoName = chatDetails?.repoName
 
@@ -34,11 +21,13 @@ export default function UserChat() {
                 }}
             />
             <div className='w-full h-full flex-grow flex flex-col justify-between'>
-                { chatDetails &&
-                <>
-                    <h1 className='text-2xl font-bold text-center'>{owner}/{repoName}</h1>
-                </>
-                }
+                {chatDetails && (
+                    <>
+                        <h1 className='text-2xl font-bold text-center'>
+                            {owner}/{repoName}
+                        </h1>
+                    </>
+                )}
                 <div className='w-full flex bg-stone-700 rounded-lg'>
                     <input
                         type={'text'}
@@ -54,4 +43,26 @@ export default function UserChat() {
             </div>
         </PageWrapper>
     )
+}
+
+export const getServerSideProps = async (context: NextPageContext) => {
+    const { query } = context
+    const chatId = query?.chatId
+    if (!chatId) {
+        console.error('No chatId found')
+        console.log({ query })
+        return { props: { query: { chatId: 0 } } }
+    } else if (Array.isArray(chatId)) {
+        console.error('chatId is an array')
+        console.log({ chatId })
+        return { props: { query: { chatId: chatId[0] } } }
+    } else if (isNaN(parseInt(chatId))) {
+        console.error('chatId is not a number')
+        console.log({ chatId })
+        return { props: { query: { chatId: 0 } } }
+    }
+
+    const chatDetails = (await callApi('getChatDetails', { chatId: parseInt(chatId) })).data
+    console.log({chatDetails})
+    return { props: { chatDetails } }
 }

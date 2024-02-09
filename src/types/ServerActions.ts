@@ -50,6 +50,13 @@ export interface ServerRoutesMeta {
         }
         res: APIResponse<ChatDetails>
     }
+    postChatMessage: {
+        args: {
+            chatId: number
+            message: string
+        }
+        res: APIResponse<string>
+    }
 }
 
 export type ServerMethod = 'POST' | 'GET'
@@ -60,6 +67,7 @@ export const ServerMethodMapping: Record<keyof ServerRoutes, ServerMethod> = {
     getReposInDb: 'POST',
     startNewChat: 'POST',
     getChatDetails: 'POST',
+    postChatMessage: 'POST',
 }
 
 export type ServerRoutesArgs = {
