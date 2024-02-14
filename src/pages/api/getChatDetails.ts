@@ -5,6 +5,7 @@ import { Octokit } from '@octokit/core'
 import { checkIfFileExists, getFileContent, insertFile } from './loadFileToVectorDb'
 import { GithubFile } from '@/types/Github'
 import { checkIfRepoIsLoaded } from './loadRepoToVectorDb'
+import { getChatDetails } from '@/utils/chatUtils'
 
 export default async function handler(
     req: NextApiRequest,
@@ -26,27 +27,15 @@ export default async function handler(
             console.log('Chat details not found')
             return res.status(400).json({ result: 'failure', error: 'Chat not found' })
         }
-        const { owner, repo_name } = chatDetails
+        const { owner, repoName, messages } = chatDetails
         return res
             .status(200)
             .json({
                 result: 'success',
-                data: { owner: owner as string, repoName: repo_name as string },
+                data: { owner, repoName, chatId, messages },
             })
     } catch (error) {
         console.error('Error getting chat details:', error)
         return res.status(500).json({ result: 'failure', error: 'Error getting chat details' })
     }
-}
-
-const getChatDetails = async (chatId: number) => {
-    const chatDetails = await supabase
-        .from('user_chat')
-        .select('owner, repo_name')
-        .filter('id', 'eq', chatId)
-        .limit(1)
-        .single()
-
-    console.log({ chatDetails })
-    return chatDetails.data
 }

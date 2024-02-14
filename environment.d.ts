@@ -6,5 +6,10 @@ namespace NodeJS {
       NEXT_PUBLIC_SUPABASE_URL: string;
       NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
       OPENAI_API_KEY: string;
+      LANGCHAIN_TRACING_V2: string;
+      LANGCHAIN_ENDPOINT: string;
+      LANGCHAIN_API_KEY: string;
+      LANGCHAIN_PROJECT: string;
+      ENV_TYPE: string;
     }
   }

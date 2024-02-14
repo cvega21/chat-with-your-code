@@ -22,8 +22,9 @@ create table
 
 create table
   user_chat_messages (
-    id serial,
+    id serial primary key,
     user_chat_id integer not null REFERENCES user_chat(id),
     message text not null,
-    created_at timestamp not null
+    sender text not null,
+    created_at timestamp not null default now()
   );

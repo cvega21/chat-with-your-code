@@ -9,7 +9,7 @@ export async function callApi<K extends keyof ServerRoutes>(
     console.log(`Calling API: ${route}`, args)
     const routeUrl = `/api/${route}`
     const method = ServerMethodMapping[route]
-    const toastId = toast.loading('Loading...')
+    // const toastId = toast.loading('Loading...')
 
     const env = getCurrentEnv()
     let baseUrl = ''
@@ -23,9 +23,10 @@ export async function callApi<K extends keyof ServerRoutes>(
     const data = (await res.json()) as ServerRoutesRes[K]
     console.log(`${route} Response`, data)
     if (data.result === 'failure') {
-        toast.error(data.error || 'Unknown error', { id: toastId })
+        // toast.error(data.error || 'Unknown error', { id: toastId })
+        toast.error(data.error || 'Unknown error')
     } else {
-        toast.success('Success', { id: toastId })
+        // toast.success('Success', { id: toastId })
     }
     return data
 }

@@ -1,6 +1,6 @@
 import { BasicButton } from '@/components/BasicButton'
 import PageWrapper from '@/layouts/PageWrapper'
-import { ChatDetails } from '@/types/Chat'
+import { ChatDetails, ChatMessage } from '@/types/Chat'
 import { callApi } from '@/utils/callApi'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -8,9 +8,28 @@ import { toast } from 'react-hot-toast'
 import { GetServerSideProps, NextPageContext } from 'next'
 
 export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) {
-    console.log({chatDetails})
-    const owner = chatDetails?.owner
-    const repoName = chatDetails?.repoName
+    const { owner, repoName, chatId, messages } = chatDetails
+    console.log({messages})
+    const [curMessage, setCurMessage] = useState<string>('')
+    const [messageHistory, setMessageHistory] = useState<ChatMessage[]>(messages)
+
+    const sendMessage = async () => {
+        if (curMessage === '') {
+            toast.error('Message cannot be empty')
+            return
+        }
+        const res = await callApi('postChatMessage', {
+            chatId,
+            message: curMessage,
+        })
+        console.log({res})
+        if (res.result === 'success') {
+            toast.success(res.data as string)
+            setCurMessage('')
+        } else {
+            toast.error('Failed to send message')
+        }
+    }
 
     return (
         <PageWrapper>
@@ -30,14 +49,20 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                 )}
                 <div className='w-full flex bg-stone-700 rounded-lg'>
                     <input
-                        type={'text'}
-                        className='bg-stone-700 p-2 w-full rounded-lg'
+                        type='text'
+                        className='bg-stone-700 p-2 px-4 w-full rounded-lg focus:outline-none placeholder-stone-500'
                         placeholder='Chat with your code...'
+                        name='chatbox'
+                        autoComplete='off'
+                        value={curMessage}
+                        onChange={(e) => setCurMessage(e.target.value)}
+                        onSubmit={sendMessage}
                     />
                     <BasicButton
                         text={'Send'}
-                        onClick={() => {}}
+                        onClick={sendMessage}
                         className='px-4 py-2 rounded-lg'
+                        buttonType='submit'
                     />
                 </div>
             </div>
