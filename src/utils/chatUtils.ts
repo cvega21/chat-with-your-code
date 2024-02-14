@@ -26,6 +26,7 @@ export const getChatMessages = async (chatId: number): Promise<ChatMessage[]> =>
         .from('user_chat_messages')
         .select('id, message, sender')
         .filter('user_chat_id', 'eq', chatId)
+        .order('created_at', { ascending: true })
 
     const messagesData = messages.data as ChatMessage[]
 

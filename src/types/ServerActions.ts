@@ -1,4 +1,4 @@
-import { ChatDetails } from './Chat'
+import { ChatDetails, ChatMessage } from './Chat'
 import { GithubFile } from './Github'
 
 export type TestReqBody = {
@@ -55,7 +55,7 @@ export interface ServerRoutesMeta {
             chatId: number
             message: string
         }
-        res: APIResponse<string>
+        res: APIResponse<{ response: string, history: ChatMessage[]}>
     }
 }
 

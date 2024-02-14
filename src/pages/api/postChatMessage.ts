@@ -21,8 +21,11 @@ export default async function handler(
         const systemResponse = 'hello my friend'
         const systemMessageId = await insertNewMessageInDb(chatId, systemResponse, 'system')
         console.log({ systemResponse })
+        const { messages } = await getChatDetails(chatId)
 
-        return res.status(200).json({ result: 'success', data: systemResponse })
+        return res
+            .status(200)
+            .json({ result: 'success', data: { response: systemResponse, history: messages } })
     } catch (error) {
         console.error('Error processing chat:', error)
         return res.status(500).json({ result: 'failure', error: 'Error processing chat' })
@@ -32,7 +35,7 @@ export default async function handler(
 const insertNewMessageInDb = async (chatId: number, message: string, sender: 'user' | 'system') => {
     const messageId = await supabase
         .from('user_chat_messages')
-        .insert([{ user_chat_id: chatId, message, sender: 'user' }])
+        .insert([{ user_chat_id: chatId, message, sender }])
         .select('id')
         .single()
 

@@ -3,33 +3,48 @@ import PageWrapper from '@/layouts/PageWrapper'
 import { ChatDetails, ChatMessage } from '@/types/Chat'
 import { callApi } from '@/utils/callApi'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { GetServerSideProps, NextPageContext } from 'next'
 
 export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) {
     const { owner, repoName, chatId, messages } = chatDetails
-    console.log({messages})
     const [curMessage, setCurMessage] = useState<string>('')
     const [messageHistory, setMessageHistory] = useState<ChatMessage[]>(messages)
+    const messagesEndRef = useRef<HTMLDivElement | null>(null)
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
     const sendMessage = async () => {
         if (curMessage === '') {
             toast.error('Message cannot be empty')
             return
         }
+        setMessageHistory([
+            ...messageHistory,
+            { id: messageHistory.length, message: curMessage, sender: 'user' },
+        ])
         const res = await callApi('postChatMessage', {
             chatId,
             message: curMessage,
         })
-        console.log({res})
-        if (res.result === 'success') {
-            toast.success(res.data as string)
+        console.log({ res })
+        if (res.result === 'success' && res.data) {
+            setMessageHistory(res.data.history)
             setCurMessage('')
         } else {
             toast.error('Failed to send message')
         }
     }
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            const scrollHeight = messagesEndRef.current.scrollHeight;
+            messagesEndRef.current.scrollTop = scrollHeight;
+        }
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [messageHistory.length]);
 
     return (
         <PageWrapper>
@@ -47,7 +62,8 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         </h1>
                     </>
                 )}
-                <div className='w-full flex bg-stone-700 rounded-lg'>
+                <ChatMessages messages={messageHistory} ref={messagesEndRef}/>
+                <form className='w-full flex bg-stone-700 rounded-lg'>
                     <input
                         type='text'
                         className='bg-stone-700 p-2 px-4 w-full rounded-lg focus:outline-none placeholder-stone-500'
@@ -55,8 +71,12 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         name='chatbox'
                         autoComplete='off'
                         value={curMessage}
-                        onChange={(e) => setCurMessage(e.target.value)}
-                        onSubmit={sendMessage}
+                        onChange={e => setCurMessage(e.target.value)}
+                        onSubmit={e => {
+                            e.preventDefault()
+                            sendMessage()
+                        }}
+                        ref={inputRef}
                     />
                     <BasicButton
                         text={'Send'}
@@ -64,11 +84,36 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         className='px-4 py-2 rounded-lg'
                         buttonType='submit'
                     />
-                </div>
+                </form>
             </div>
         </PageWrapper>
     )
 }
+
+const ChatMessages = React.forwardRef<HTMLDivElement, { messages: ChatMessage[] }>(
+    ({ messages }, ref) => {
+        return (
+            <div ref={ref} className='flex flex-col justify-between gap-4 max-h-[70vh] overflow-y-scroll px-2'>
+                {messages.map(message => (
+                    <div
+                        key={message.id}
+                        className={`flex w-full ${
+                            message.sender === 'system' ? 'justify-start' : 'justify-end'
+                        }`}
+                    >
+                        <div
+                            className={`max-w-max py-2 px-3 rounded-xl ${
+                                message.sender === 'system' ? 'bg-stone-700' : 'bg-sky-600'
+                            }`}
+                        >
+                            <p>{message.message}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+)
 
 export const getServerSideProps = async (context: NextPageContext) => {
     const { query } = context
@@ -88,6 +133,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
     }
 
     const chatDetails = (await callApi('getChatDetails', { chatId: parseInt(chatId) })).data
-    console.log({chatDetails})
+    console.log({ chatDetails })
     return { props: { chatDetails } }
 }
