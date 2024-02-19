@@ -23,6 +23,8 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
             ...messageHistory,
             { id: messageHistory.length, message: curMessage, sender: 'user' },
         ])
+        setCurMessage('')
+        const toastId = toast.loading('Loading...')
         const res = await callApi('postChatMessage', {
             chatId,
             message: curMessage,
@@ -30,7 +32,7 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
         console.log({ res })
         if (res.result === 'success' && res.data) {
             setMessageHistory(res.data.history)
-            setCurMessage('')
+            toast.dismiss(toastId)
         } else {
             toast.error('Failed to send message')
         }
@@ -38,13 +40,13 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
 
     useEffect(() => {
         if (messagesEndRef.current) {
-            const scrollHeight = messagesEndRef.current.scrollHeight;
-            messagesEndRef.current.scrollTop = scrollHeight;
+            const scrollHeight = messagesEndRef.current.scrollHeight
+            messagesEndRef.current.scrollTop = scrollHeight
         }
         if (inputRef.current) {
             inputRef.current.focus()
         }
-    }, [messageHistory.length]);
+    }, [messageHistory.length])
 
     return (
         <PageWrapper>
@@ -62,8 +64,14 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         </h1>
                     </>
                 )}
-                <ChatMessages messages={messageHistory} ref={messagesEndRef}/>
-                <form className='w-full flex bg-stone-700 rounded-lg'>
+                <ChatMessages messages={messageHistory} ref={messagesEndRef} />
+                <form
+                    className='w-full flex bg-stone-700 rounded-lg'
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        sendMessage()
+                    }}
+                >
                     <input
                         type='text'
                         className='bg-stone-700 p-2 px-4 w-full rounded-lg focus:outline-none placeholder-stone-500'
@@ -72,15 +80,11 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         autoComplete='off'
                         value={curMessage}
                         onChange={e => setCurMessage(e.target.value)}
-                        onSubmit={e => {
-                            e.preventDefault()
-                            sendMessage()
-                        }}
                         ref={inputRef}
                     />
                     <BasicButton
                         text={'Send'}
-                        onClick={sendMessage}
+                        onClick={() => {}}
                         className='px-4 py-2 rounded-lg'
                         buttonType='submit'
                     />
@@ -93,7 +97,10 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
 const ChatMessages = React.forwardRef<HTMLDivElement, { messages: ChatMessage[] }>(
     ({ messages }, ref) => {
         return (
-            <div ref={ref} className='flex flex-col justify-between gap-4 max-h-[70vh] overflow-y-scroll px-2'>
+            <div
+                ref={ref}
+                className='flex flex-col justify-between gap-4 max-h-[70vh] overflow-y-scroll px-2'
+            >
                 {messages.map(message => (
                     <div
                         key={message.id}

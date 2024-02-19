@@ -32,7 +32,7 @@ export default async function handler(
     console.log({ chatId, message })
 
     try {
-        const { repoName, owner, messages } = await getChatDetails(chatId)
+        const { repoName, owner } = await getChatDetails(chatId)
         console.log('getting model and memory')
         const model = getModelWithParser('gpt-3.5-turbo-0125')
         const memory = getModelMemory('chat_history')
@@ -83,7 +83,7 @@ export default async function handler(
                             similarity: d.similarity,
                         },
                     }))
-                    
+
                     const relevantDocs = createLangchainDocs(fileContents)
                     // console.log({relevantDocs})
 
@@ -130,10 +130,11 @@ export default async function handler(
         const userMessageId = await insertNewMessageInDb(chatId, message, 'user')
         const systemMessageId = await insertNewMessageInDb(chatId, systemResponse, 'system')
         console.log({ systemResponse })
+        const { messages: chatHistoryInDb } = await getChatDetails(chatId)
 
         return res
             .status(200)
-            .json({ result: 'success', data: { response: systemResponse, history: messages } })
+            .json({ result: 'success', data: { response: systemResponse, history: chatHistoryInDb } })
     } catch (error) {
         console.error('Error procesxsing chat:', error)
         return res.status(500).json({ result: 'failure', error: 'Error processing chat' })
