@@ -94,8 +94,8 @@ export const insertFile = async ({
                 repo_name: repoName,
                 path,
                 file_name: fileName,
-                file_content: fileContent,
-                embedding,
+                content: fileContent,
+                embedding: JSON.stringify(embedding),
             })
             .select()
         console.log({ supaRes })
