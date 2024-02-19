@@ -13,6 +13,7 @@ import {
     AIMessagePromptTemplate,
     HumanMessagePromptTemplate,
 } from 'langchain/prompts'
+import { OpenAIEmbeddingModel, PreLangchainDoc } from '@/types/Langchain'
 
 /** Loads langchain doc for repo */
 export const getDocsForRepo = async ({ owner, repoName }: { owner: string; repoName: string }) => {
@@ -122,4 +123,24 @@ export const getCodeChatPromptTemplate = () => {
     ])
 
     return combineDocumentsPrompt
+}
+
+export const embedText = (text: string, model?: OpenAIEmbeddingModel) => {
+    const embeddings = new OpenAIEmbeddings({
+        openAIApiKey: process.env.OPENAI_API_KEY,
+        modelName: model || 'text-embedding-ada-002',
+    })
+    return embeddings.embedQuery(text)
+}
+
+export const createLangchainDocs = (data: Array<PreLangchainDoc>) => {
+    const docs: Document[] = []
+
+    for (const d of data) {
+        const { content, metadata } = d
+        const doc = new Document({ pageContent: content, metadata })
+        docs.push(doc)
+    }
+
+    return docs
 }
