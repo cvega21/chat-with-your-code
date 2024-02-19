@@ -11,19 +11,6 @@ create table
     constraint code_embeddings_pkey primary key (id)
   ) tablespace pg_default;
 
--- tmp
-CREATE TABLE public.code_embeddings_new (
-  id serial PRIMARY KEY,
-  owner text,
-  repo_name text,
-  path text,
-  file_name text,
-  content text,
-  embedding public.vector,
-  metadata JSONB
-) TABLESPACE pg_default;
-
-
 create view distinct_repo as
   select distinct owner, repo_name from public.code_embeddings;
 
@@ -52,7 +39,7 @@ create or replace function match_code (
 )
 returns TABLE (
   id bigint,
-  file_content text,
+  content text,
   file_name text,
   similarity double precision
 )
@@ -60,7 +47,7 @@ language sql stable
 as $$
   select
     code_embeddings.id,
-    code_embeddings.file_content,
+    code_embeddings.content,
     code_embeddings.file_name,
     1 - (code_embeddings.embedding <=> query_embedding) as similarity
   from code_embeddings

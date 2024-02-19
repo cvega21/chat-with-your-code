@@ -61,39 +61,6 @@ export interface Database {
                 }
                 Relationships: []
             }
-            code_embeddings_new: {
-                Row: {
-                    content: string | null
-                    embedding: string | null
-                    file_name: string | null
-                    id: number
-                    metadata: Json | null
-                    owner: string | null
-                    path: string | null
-                    repo_name: string | null
-                }
-                Insert: {
-                    content?: string | null
-                    embedding?: string | null
-                    file_name?: string | null
-                    id?: number
-                    metadata?: Json | null
-                    owner?: string | null
-                    path?: string | null
-                    repo_name?: string | null
-                }
-                Update: {
-                    content?: string | null
-                    embedding?: string | null
-                    file_name?: string | null
-                    id?: number
-                    metadata?: Json | null
-                    owner?: string | null
-                    path?: string | null
-                    repo_name?: string | null
-                }
-                Relationships: []
-            }
             user_chat: {
                 Row: {
                     id: number
@@ -166,35 +133,21 @@ export interface Database {
                 }
                 Returns: unknown
             }
-            match_code:
-                | {
-                      Args: {
-                          query_embedding: string
-                          match_threshold: number
-                          match_count: number
-                      }
-                      Returns: {
-                          id: number
-                          file_content: string
-                          file_name: string
-                          similarity: number
-                      }[]
-                  }
-                | {
-                      Args: {
-                          query_embedding: string
-                          match_threshold: number
-                          match_count: number
-                          repo_name: string
-                          owner: string
-                      }
-                      Returns: {
-                          id: number
-                          file_content: string
-                          file_name: string
-                          similarity: number
-                      }[]
-                  }
+            match_code: {
+                Args: {
+                    query_embedding: string
+                    match_threshold: number
+                    match_count: number
+                    repo_name: string
+                    owner: string
+                }
+                Returns: {
+                    id: number
+                    content: string
+                    file_name: string
+                    similarity: number
+                }[]
+            }
             match_documents: {
                 Args: {
                     query_embedding: string
