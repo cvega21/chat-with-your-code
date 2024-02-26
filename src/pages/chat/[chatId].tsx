@@ -46,7 +46,6 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
             <Link href='/'>
                 <BasicButton text='Go Back' onClick={() => {}} />
             </Link>
-            <div className='w-full h-full flex-grow flex flex-col justify-between'>
                 {chatDetails && (
                     <>
                         <h1 className='text-2xl font-bold text-center'>
@@ -54,13 +53,14 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         </h1>
                     </>
                 )}
+            <div className='w-full h-full flex-grow flex flex-col justify-end'>
                 <ChatMessages
                     messages={vercelMessages}
                     ref={messagesEndRef}
                     isLoading={isLoading}
                 />
                 <form
-                    className='w-full flex bg-stone-700 rounded-lg'
+                    className='w-full flex bg-stone-700 rounded-lg mt-8'
                     onSubmit={e => {
                         console.log('submit')
                         e.preventDefault()
@@ -105,7 +105,7 @@ const ChatMessages = React.forwardRef<
     return (
         <div
             ref={ref}
-            className='flex flex-col justify-between gap-4 max-h-[70vh] overflow-y-scroll px-2'
+            className='flex flex-col justify-between gap-4 max-h-[70vh] min-h-full px-2 overflow-y-auto'
         >
             {messages.map((message, idx) => (
                 <div
