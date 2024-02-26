@@ -1,5 +1,5 @@
 import React from 'react'
-import { UsernameReposResponse, GithubFile, RepoContentsResponse } from '@/types/Github'
+import { UsernameReposResponse, RepoContentsResponse } from '@/types/Github'
 import { Tag } from './Tag'
 import { getLanguageColor } from '@/utils/styles'
 import { BasicButton } from './BasicButton'

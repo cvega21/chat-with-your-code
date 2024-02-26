@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
-import { createBrowserClient } from '@supabase/ssr'
 import { supabase } from '@/utils/utils'
 
 export const LoginButton = () => {

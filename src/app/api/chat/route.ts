@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { Message as VercelChatMessage, StreamingTextResponse, LangChainStream } from 'ai'
+import { NextRequest } from 'next/server'
+import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
 
 import { BytesOutputParser } from 'langchain/schema/output_parser'
-import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
+import { ServerRoutesArgs } from '@/types/ServerActions'
 import { getChatDetails, insertNewMessageInDb } from '@/utils/chatUtils'
-import { supabase, openai } from '@/pages/api/lib/singletons'
+import { supabase } from '@/pages/api/lib/singletons'
 import { RunnableSequence } from '@langchain/core/runnables'
 import {
     getCodeChatPromptTemplate,

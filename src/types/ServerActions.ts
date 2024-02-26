@@ -1,5 +1,4 @@
 import { ChatDetails, ChatMessage } from './Chat'
-import { GithubFile } from './Github'
 import { Message as VercelChatMessage } from 'ai'
 
 export type TestReqBody = {

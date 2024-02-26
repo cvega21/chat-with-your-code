@@ -1,4 +1,4 @@
-import { openai, supabase } from '../pages/api/lib/singletons'
+import { supabase } from '../pages/api/lib/singletons'
 import { Document } from 'langchain/document'
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 import { SupabaseClient } from '@supabase/supabase-js'
@@ -16,8 +16,7 @@ import {
 import { OpenAIEmbeddingModel, PreLangchainDoc } from '@/types/Langchain'
 import { EmbeddingsInterface } from '@langchain/core/embeddings'
 import { SupabaseLibArgs } from 'langchain/vectorstores/supabase'
-import { Callbacks, BaseCallbackManager } from '@langchain/core/callbacks/manager'
-import { BaseCallbackHandler } from '@langchain/core/callbacks/base'
+import { Callbacks } from '@langchain/core/callbacks/manager'
 
 /** Loads langchain doc for repo */
 export const getDocsForRepo = async ({ owner, repoName }: { owner: string; repoName: string }) => {

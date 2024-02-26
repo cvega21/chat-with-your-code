@@ -1,6 +1,6 @@
 import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { openai, supabase } from './lib/singletons'
+import { supabase } from './lib/singletons'
 import { checkIfRepoIsLoaded } from './loadRepoToVectorDb'
 
 export default async function handler(

@@ -1,11 +1,9 @@
 import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
 import { getChatDetails, insertNewMessageInDb } from '@/utils/chatUtils'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { openai, supabase } from './lib/singletons'
-import { RunnableSequence, RunnablePassthrough } from '@langchain/core/runnables'
+import { supabase } from './lib/singletons'
+import { RunnableSequence } from '@langchain/core/runnables'
 import {
-    createLangchainDocs,
-    embedText,
     getCodeChatPromptTemplate,
     getCodeFollowupPrompt,
     getEmbeddingsModel,
@@ -15,7 +13,6 @@ import {
 } from '@/utils/langchain'
 import { formatDocumentsAsString } from 'langchain/util/document'
 import { StringOutputParser } from '@langchain/core/output_parsers'
-import { PreLangchainDoc } from '@/types/Langchain'
 
 export default async function handler(
     req: NextApiRequest,

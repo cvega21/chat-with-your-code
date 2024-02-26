@@ -1,6 +1,5 @@
 import { RepoLanguage } from '@/types/Github'
 
-
 export const languageColors: Record<RepoLanguage, { bgColor: string, textColor: string}> = {
     JavaScript: {
         bgColor: 'bg-yellow-400',

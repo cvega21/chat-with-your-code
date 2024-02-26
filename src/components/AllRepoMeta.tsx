@@ -6,7 +6,6 @@ import { UsernameReposResponse } from '@/types/Github'
 import { RepoMeta } from '@/components/RepoMeta'
 import { useOctokitContext } from '@/hooks/useOctokitContext'
 import { InstallAppButton } from './InstallAppButton'
-import { BasicButton } from './BasicButton'
 import { callApi } from '@/utils/callApi'
 import { ChatDetails } from '@/types/Chat'
 
@@ -14,7 +13,7 @@ export const AllRepoMeta = () => {
     const user = useUser()
     const session = useSession()
     const [userReposMeta, setUserReposMeta] = useState<UsernameReposResponse[]>([])
-    const { octokit, username, getOctokit } = useOctokitContext()
+    const { username, getOctokit } = useOctokitContext()
     const [reposInDb, setReposInDb] = useState<string[]>([])
     const [recentChats, setRecentChats] = useState<Pick<ChatDetails, 'chatId' | 'repoName'>[]>([])
 

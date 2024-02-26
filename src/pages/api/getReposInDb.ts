@@ -1,9 +1,6 @@
 import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { openai, supabase } from './lib/singletons'
-import { Octokit } from '@octokit/core'
-import { checkIfFileExists, getFileContent, insertFile } from './loadFileToVectorDb'
-import { GithubFile } from '@/types/Github'
+import { supabase } from './lib/singletons'
 
 export default async function handler(
     req: NextApiRequest,

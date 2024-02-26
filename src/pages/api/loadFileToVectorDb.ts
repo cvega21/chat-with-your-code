@@ -1,5 +1,4 @@
 import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
-import { GithubFile } from '@/types/Github'
 import { Octokit } from '@octokit/core'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { openai, supabase } from './lib/singletons'

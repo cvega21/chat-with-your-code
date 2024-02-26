@@ -1,8 +1,6 @@
 import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from './lib/singletons'
-import { checkIfFileExists, getFileContent, insertFile } from './loadFileToVectorDb'
-import { GithubFile } from '@/types/Github'
 
 export default async function handler(
     req: NextApiRequest,

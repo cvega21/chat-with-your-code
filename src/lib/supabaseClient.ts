@@ -1,5 +1,4 @@
 import { createBrowserClient } from '@supabase/ssr'
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
 export const getSupabaseBrowserClient = () => {
     const supabase = createBrowserClient(
