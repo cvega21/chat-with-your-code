@@ -30,17 +30,25 @@ export default async function handler(
     const { chatId, message } = parsed as ServerRoutesArgs['postChatMessage']
     console.log({ chatId, message })
 
-    // const vectorStore = await getVectorStoreFromExistingIndex({
-    //     embeddings: getEmbeddingsModel('text-embedding-3-small'),
-    //     dbConfig: {
-    //         client: supabase,
-    //         tableName: 'supabase_vector_store',
-    //         queryName: 'match_documents'
-    //     },
-    // })
 
     try {
         const { repoName, owner } = await getChatDetails(chatId)
+
+        const vectorStore = await getVectorStoreFromExistingIndex({
+            embeddings: getEmbeddingsModel('text-embedding-3-small'),
+            dbConfig: {
+                client: supabase,
+                tableName: 'supabase_vector_store',
+                queryName: 'match_documents',
+                filter: {
+                    owner,
+                    repo_name: repoName,
+                }
+            },
+        })
+
+        const retriever = vectorStore.asRetriever()
+
         console.log('getting model and memory')
         const model = getModelWithParser('gpt-3.5-turbo-0125')
         const memory = getModelMemory('chat_history')
@@ -55,50 +63,16 @@ export default async function handler(
                     return output
                 },
                 chat_history: async () => {
-                    console.log('2 - Chat History')
+                    console.log('0 - Chat History')
                     const { chat_history } = await memory.loadMemoryVariables({})
                     console.log(`Chat history messages count: ${chat_history?.length}`)
                     return chat_history
                 },
                 context: async (output: string) => {
-                    console.log('3 - Context')
-                    console.log({ output })
-                    const embeddedQuery = await embedText(output)
-                    const queryResult = await supabase.rpc('match_code', {
-                        query_embedding: JSON.stringify(embeddedQuery),
-                        match_threshold: 0.1,
-                        match_count: 5,
-                        repo_name: repoName,
-                        owner,
-                    })
-
-                    const { data } = queryResult
-                    if (!data) {
-                        const result = 'No relevant documents found.'
-                        console.log(result)
-                        return result
-                    }
-
-                    console.log(`Retrieved ${queryResult.data.length} relevant documents`)
-                    console.log(queryResult.data.map(file => file.file_name).join(', '))
-
-                    const fileContents: PreLangchainDoc[] = data.map(d => ({
-                        content: d.content,
-                        metadata: {
-                            file_name: d.file_name,
-                            repoName,
-                            owner,
-                            similarity: d.similarity,
-                        },
-                    }))
-
-                    const relevantDocs = createLangchainDocs(fileContents)
-                    // console.log({relevantDocs})
-
-                    const documentStrings = formatDocumentsAsString(relevantDocs)
-                    console.log(`Context length: ${documentStrings.length}`)
-                    // console.log(documentStrings)
-                    return documentStrings
+                    console.log('2 - Context')
+                    const relevantDocs = await retriever.getRelevantDocuments(output)
+                    console.log(relevantDocs.map(d => d.metadata.file_name))
+                    return formatDocumentsAsString(relevantDocs)
                 },
             },
             combineDocumentsPrompt,
