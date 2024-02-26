@@ -55,7 +55,7 @@ export const getFileContent = async ({
             format: 'raw',
         },
     })
-    console.log({ file })
+    // console.log({ file })
     return file.data as unknown as string
 }
 

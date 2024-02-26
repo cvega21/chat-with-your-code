@@ -14,6 +14,8 @@ import {
     HumanMessagePromptTemplate,
 } from 'langchain/prompts'
 import { OpenAIEmbeddingModel, PreLangchainDoc } from '@/types/Langchain'
+import { EmbeddingsInterface } from '@langchain/core/embeddings'
+import { SupabaseLibArgs } from 'langchain/vectorstores/supabase'
 
 /** Loads langchain doc for repo */
 export const getDocsForRepo = async ({ owner, repoName }: { owner: string; repoName: string }) => {
@@ -46,7 +48,7 @@ export const getDocsForRepo = async ({ owner, repoName }: { owner: string; repoN
     return docs
 }
 
-export const splitIntoChunks = async ({
+export const splitCodeIntoChunks = async ({
     docs,
     chunkSize,
     chunkOverlap,
@@ -62,6 +64,7 @@ export const splitIntoChunks = async ({
     return await javascriptSplitter.splitDocuments(docs)
 }
 
+/** Need to chunk up contents first */
 export const getVectorStoreRetriever = async ({
     client,
     tableName,
@@ -74,7 +77,6 @@ export const getVectorStoreRetriever = async ({
     const vectorStore = await SupabaseVectorStore.fromDocuments(chunks, new OpenAIEmbeddings(), {
         client,
         tableName,
-        // queryName: 'match_code', // using match_documents by default
     })
 
     const retriever = vectorStore.asRetriever({
@@ -83,6 +85,17 @@ export const getVectorStoreRetriever = async ({
     })
 
     return retriever
+}
+
+export const getVectorStoreFromExistingIndex = async ({
+    embeddings,
+    dbConfig,
+}: {
+    embeddings: EmbeddingsInterface
+    dbConfig: SupabaseLibArgs
+}) => {
+    const vectorStore = await SupabaseVectorStore.fromExistingIndex(embeddings, dbConfig)
+    return vectorStore
 }
 
 export const getModelWithParser = (modelName: 'gpt-4' | 'gpt-3.5-turbo-0125') => {
@@ -143,4 +156,12 @@ export const createLangchainDocs = (data: Array<PreLangchainDoc>) => {
     }
 
     return docs
+}
+
+export const getEmbeddingsModel = (modelName: OpenAIEmbeddingModel): OpenAIEmbeddings => {
+    const embeddings = new OpenAIEmbeddings({
+        openAIApiKey: process.env.OPENAI_API_KEY,
+        modelName,
+    })
+    return embeddings
 }

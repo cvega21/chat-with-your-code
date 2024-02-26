@@ -4,6 +4,9 @@ import { openai, supabase } from './lib/singletons'
 import { Octokit } from '@octokit/core'
 import { checkIfFileExists, getFileContent, insertFile } from './loadFileToVectorDb'
 import { GithubFile } from '@/types/Github'
+import { PreLangchainDoc } from '@/types/Langchain'
+import { createLangchainDocs, getEmbeddingsModel, splitCodeIntoChunks } from '@/utils/langchain'
+import { SupabaseVectorStore } from 'langchain/vectorstores/supabase'
 
 export default async function handler(
     req: NextApiRequest,
@@ -18,46 +21,63 @@ export default async function handler(
     console.log(`Loading repository: ${repoName} for ${owner}`)
     const octokit = new Octokit({ auth: provider_token })
 
-    const repoExists = await checkIfRepoIsLoaded(owner, repoName)
+    const repoExists = await checkIfVectorStoreIsLoaded(owner, repoName)
     if (repoExists) {
         console.log('Repo already loaded')
         return res.status(200).json({ result: 'success', data: 'Repo already loaded' })
     }
 
-    try {
-        // Retrieve all files from the repository
-        const files = await getAllFilesInRepo(octokit, owner, repoName)
+    // Retrieve all files from the repository, fill content prop
+    const filePreDocs: Array<PreLangchainDoc> = []
 
-        for (const file of files) {
-            const fileExists = await checkIfFileExists({
+    const files = await getAllFilesInRepo(octokit, owner, repoName)
+    for (const file of files) {
+        file.content = await getFileContent({
+            octokit,
+            repoName,
+            path: file.path,
+            owner,
+        })
+        const fileDoc: PreLangchainDoc = {
+            content: file.content,
+            metadata: {
+                file_name: file.name,
                 owner,
-                repoName,
                 path: file.path,
-                fileName: file.name,
-            })
-            if (!fileExists) {
-                const fileContent = await getFileContent({
-                    octokit,
-                    repoName,
-                    path: file.path,
-                    owner,
-                })
-
-                await insertFile({
-                    owner,
-                    repoName,
-                    path: file.path,
-                    fileName: file.name,
-                    fileContent,
-                })
-            }
+                repo_name: repoName,
+                loaded_ts: new Date().toISOString(),
+            },
         }
-
-        return res.status(200).json({ result: 'success', data: 'Files loaded' })
-    } catch (error) {
-        console.error('Error processing repository:', error)
-        return res.status(500).json({ result: 'failure', error: 'Error processing repository' })
+        filePreDocs.push(fileDoc)
     }
+
+    const fileDocs = createLangchainDocs(filePreDocs)
+    const fileDocChunks = await splitCodeIntoChunks({
+        docs: fileDocs,
+        chunkSize: 2000,
+        chunkOverlap: 200,
+    })
+
+    console.log('chunked files into', fileDocChunks.length, 'chunks')
+
+    // init vector store
+    const vectorStore = await SupabaseVectorStore.fromDocuments(
+        fileDocChunks,
+        getEmbeddingsModel('text-embedding-3-small'),
+        {
+            client: supabase,
+            tableName: 'supabase_vector_store',
+            queryName: 'match_documents',
+        }
+    )
+
+    console.log('vector store initialized')
+
+    // console.log('doing test...')
+    // const resultOne = await vectorStore.similaritySearch('Repository readme', 1)
+    // console.log({ resultOne })
+
+    return res.status(200).json({ result: 'success', data: 'Files loaded' })
 }
 
 const getAllFilesInRepo = async (octokit: Octokit, owner: string, repo: string) => {
@@ -122,4 +142,16 @@ export const checkIfRepoIsLoaded = async (owner: string, repoName: string) => {
         .eq('repo_name', repoName)
 
     return repo.data !== null
+}
+
+export const checkIfVectorStoreIsLoaded = async (owner: string, repoName: string) => {
+    console.log(`Checking if vector store is loaded for ${owner}/${repoName}`)
+    const { count, error } = await supabase
+        .from('supabase_vector_store')
+        .select('*', { count: 'exact', head: true })
+        .contains('metadata', { owner, repo_name: repoName })
+
+    // console.log(`Vector store count: ${count}`)
+
+    return count && count > 0
 }

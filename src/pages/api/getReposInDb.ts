@@ -18,15 +18,17 @@ export default async function handler(
     console.log(`Getting repositories in Vector DB for: ${owner}`)
 
     try {
-        // Retrieve distinct repo_names where owner = owner from supabase code_embeddings table
         const repos = await supabase
-            .from('distinct_repo')
-            .select('repo_name')
-            .eq('owner', owner)
+            .from('supabase_vector_store')
+            .select('metadata->repo_name')
+            .contains('metadata', { owner})
 
-        if (repos.data === null) { return res.status(500).json({ result: 'failure', error: 'Error retrieving repositories' }) }
-        const repoNames = repos.data.map((repo) => repo.repo_name as string)
-
+        if (repos.data === null) {
+            return res
+                .status(500)
+                .json({ result: 'failure', error: 'Error retrieving repositories' })
+        }
+        const repoNames = repos.data.map(repo => repo.repo_name as string)
 
         return res.status(200).json({ result: 'success', data: repoNames })
     } catch (error) {

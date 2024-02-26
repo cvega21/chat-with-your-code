@@ -8,11 +8,10 @@ import {
     embedText,
     getCodeChatPromptTemplate,
     getCodeFollowupPrompt,
-    getDocsForRepo,
+    getEmbeddingsModel,
     getModelMemory,
     getModelWithParser,
-    getVectorStoreRetriever,
-    splitIntoChunks,
+    getVectorStoreFromExistingIndex,
 } from '@/utils/langchain'
 import { formatDocumentsAsString } from 'langchain/util/document'
 import { StringOutputParser } from '@langchain/core/output_parsers'
@@ -30,6 +29,15 @@ export default async function handler(
     const parsed = JSON.parse(req.body)
     const { chatId, message } = parsed as ServerRoutesArgs['postChatMessage']
     console.log({ chatId, message })
+
+    // const vectorStore = await getVectorStoreFromExistingIndex({
+    //     embeddings: getEmbeddingsModel('text-embedding-3-small'),
+    //     dbConfig: {
+    //         client: supabase,
+    //         tableName: 'supabase_vector_store',
+    //         queryName: 'match_documents'
+    //     },
+    // })
 
     try {
         const { repoName, owner } = await getChatDetails(chatId)
@@ -132,9 +140,10 @@ export default async function handler(
         console.log({ systemResponse })
         const { messages: chatHistoryInDb } = await getChatDetails(chatId)
 
-        return res
-            .status(200)
-            .json({ result: 'success', data: { response: systemResponse, history: chatHistoryInDb } })
+        return res.status(200).json({
+            result: 'success',
+            data: { response: systemResponse, history: chatHistoryInDb },
+        })
     } catch (error) {
         console.error('Error procesxsing chat:', error)
         return res.status(500).json({ result: 'failure', error: 'Error processing chat' })
