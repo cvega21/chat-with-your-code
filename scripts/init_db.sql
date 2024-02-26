@@ -65,8 +65,8 @@ create function match_documents (
   filter jsonb DEFAULT '{}'
 ) returns table (
   id int,
-  file_content text,
-  file_name text,
+  content text,
+  metadata jsonb,
   embedding jsonb,
   similarity float
 )
@@ -77,12 +77,20 @@ begin
   return query
   select
     id,
-    file_content,
-    file_name,
+    content,
+    metadata,
     (embedding::text)::jsonb as embedding,
-    1 - (code_embeddings.embedding <=> query_embedding) as similarity
-  from code_embeddings
-  order by code_embeddings.embedding <=> query_embedding
+    1 - (supabase_vector_store.embedding <=> query_embedding) as similarity
+  from supabase_vector_store
+  where metadata @> filter
+  order by supabase_vector_store.embedding <=> query_embedding
   limit match_count;
 end;
 $$;
+
+create table supabase_vector_store (
+  content text not null,
+  embedding vector(1536) not null,
+  metadata JSONB,
+  id serial primary key
+);

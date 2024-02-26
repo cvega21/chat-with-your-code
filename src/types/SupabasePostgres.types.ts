@@ -61,6 +61,27 @@ export interface Database {
                 }
                 Relationships: []
             }
+            supabase_vector_store: {
+                Row: {
+                    content: string
+                    embedding: string
+                    id: number
+                    metadata: Json | null
+                }
+                Insert: {
+                    content: string
+                    embedding: string
+                    id?: number
+                    metadata?: Json | null
+                }
+                Update: {
+                    content?: string
+                    embedding?: string
+                    id?: number
+                    metadata?: Json | null
+                }
+                Relationships: []
+            }
             user_chat: {
                 Row: {
                     id: number
@@ -156,8 +177,8 @@ export interface Database {
                 }
                 Returns: {
                     id: number
-                    file_content: string
-                    file_name: string
+                    content: string
+                    metadata: Json
                     embedding: Json
                     similarity: number
                 }[]
