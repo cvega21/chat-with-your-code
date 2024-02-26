@@ -130,7 +130,26 @@ const getAllFilesInRepo = async (octokit: Octokit, owner: string, repo: string) 
 }
 
 const isExcludedFileType = (fileName: string) => {
-    const excludedExtensions = ['.png', '.svg', '.jpg', '.gif', '.ico', '.lock']
+    const excludedExtensions = [
+        '.png',
+        '.svg',
+        '.jpg',
+        '.gif',
+        '.ico',
+        '.lock',
+        'Procfile',
+        '.wav',
+        '.aup',
+        '.au',
+        '.mp3',
+        '.txt',
+        '.mp4',
+        '.mov',
+        '.avi',
+        '.webm',
+        '.pdf',
+        '.webp'
+    ]
     return excludedExtensions.some(ext => fileName.endsWith(ext))
 }
 

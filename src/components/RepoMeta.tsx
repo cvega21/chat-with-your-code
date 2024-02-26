@@ -10,7 +10,15 @@ import { useSession } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 
-export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded: boolean }) => {
+export const RepoMeta = ({
+    repo,
+    loaded,
+    chatId,
+}: {
+    repo: UsernameReposResponse
+    loaded: boolean
+    chatId?: number
+}) => {
     const { name, fork, description, html_url, visibility, owner, language } = repo
     const { login: ownerName, avatar_url } = owner
     const { bgColor, textColor } = getLanguageColor(language ?? '')
@@ -75,6 +83,12 @@ export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded
         return chatId
     }
 
+    const resumeChat = async () => {
+        // send API request to resume a chat
+        if (!chatId) return console.error('no chatId')
+        router.push(`/chat/${chatId}`)
+    }
+
     return (
         <div className='border-b border-black py-2'>
             <div className='flex gap-4 items-center'>
@@ -95,7 +109,7 @@ export const RepoMeta = ({ repo, loaded }: { repo: UsernameReposResponse; loaded
                     </>
                 ) : (
                     <>
-                        <BasicButton text={'Begin Chat'} onClick={startNewChat} />
+                        <BasicButton text={chatId ? 'Resume Chat' : 'Begin Chat'} onClick={chatId ? resumeChat : startNewChat} />
                     </>
                 )}
             </div>

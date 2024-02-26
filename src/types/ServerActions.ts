@@ -55,7 +55,13 @@ export interface ServerRoutesMeta {
             chatId: number
             message: string
         }
-        res: APIResponse<{ response: string, history: ChatMessage[]}>
+        res: APIResponse<{ response: string; history: ChatMessage[] }>
+    }
+    getRecentChats: {
+        args: {
+            owner: string
+        }
+        res: APIResponse<{ chatId: number; repoName: string }[]>
     }
 }
 
@@ -68,6 +74,7 @@ export const ServerMethodMapping: Record<keyof ServerRoutes, ServerMethod> = {
     startNewChat: 'POST',
     getChatDetails: 'POST',
     postChatMessage: 'POST',
+    getRecentChats: 'POST',
 }
 
 export type ServerRoutesArgs = {
@@ -79,7 +86,5 @@ export type ServerRoutesRes = {
 }
 
 export type ServerRoutes = {
-    [K in keyof ServerRoutesMeta]: (
-        args: ServerRoutesArgs[K]
-    ) => ServerRoutesMeta[K]['res']
+    [K in keyof ServerRoutesMeta]: (args: ServerRoutesArgs[K]) => ServerRoutesMeta[K]['res']
 }
