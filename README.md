@@ -1,33 +1,9 @@
-<!--
---- Readme.md Snippet without images Start ---
-## Tech Stack
-cvega21/ai-saas is built on the following main stack:
-- [Firebase](https://firebase.google.com/) – Realtime Backend / API
-- [Jest](http://facebook.github.io/jest/) – Javascript Testing Framework
-- [Node.js](http://nodejs.org/) – Frameworks (Full Stack)
-- [React](https://reactjs.org/) – Javascript UI Libraries
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) – Languages
-- [TypeScript](http://www.typescriptlang.org) – Languages
-- [Autoprefixer](https://github.com/postcss/autoprefixer) – CSS Pre-processors / Extensions
-- [ESLint](http://eslint.org/) – Code Review
-- [Visual Studio Code](https://code.visualstudio.com/) – Text Editor
-- [Yarn](https://yarnpkg.com/) – Front End Package Manager
-- [Next.js](https://nextjs.org/) – Frameworks (Full Stack)
-- [Prettier](https://prettier.io/) – Code Review
-
-Full tech stack [here](/techstack.md)
---- Readme.md Snippet without images End ---
-
---- Readme.md Snippet with images Start ---
-
-
-Full tech stack [here](/techstack.md)
---- Readme.md Snippet with images End ---
--->
 <div align="left">
-
+    
 # Chat With Your Code
 Chat with your Github repositories, built with LangChain, Supabase, Next.js and Github's API. Uses gpt-3.5-turbo-0125 by default.
+
+![Feb-26-202405-57-49-ezgif com-video-to-gif-converter](https://github.com/cvega21/chat-with-your-code/assets/54726618/e4e2447b-08b7-4cff-823f-f8965f63f11a)
 
 ## How It Works
 1. Log in with Github to get provider token
