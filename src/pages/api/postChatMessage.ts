@@ -1,5 +1,5 @@
 import { ServerRoutesArgs, ServerRoutesRes } from '@/types/ServerActions'
-import { getChatDetails } from '@/utils/chatUtils'
+import { getChatDetails, insertNewMessageInDb } from '@/utils/chatUtils'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { openai, supabase } from './lib/singletons'
 import { RunnableSequence, RunnablePassthrough } from '@langchain/core/runnables'
@@ -80,7 +80,7 @@ export default async function handler(
             new StringOutputParser(),
         ])
 
-        const conversationalQaChain = RunnableSequence.from([
+        const chain = RunnableSequence.from([
             {
                 question: (i: { question: string }) => i.question,
                 chat_history: async () => {
@@ -96,7 +96,7 @@ export default async function handler(
 
         const question = message
         console.log('invoking chain')
-        const systemResponse = await conversationalQaChain.invoke({
+        const systemResponse = await chain.invoke({
             question,
         })
 
@@ -122,14 +122,4 @@ export default async function handler(
         console.error('Error procesxsing chat:', error)
         return res.status(500).json({ result: 'failure', error: 'Error processing chat' })
     }
-}
-
-const insertNewMessageInDb = async (chatId: number, message: string, sender: 'user' | 'system') => {
-    const messageId = await supabase
-        .from('user_chat_messages')
-        .insert([{ user_chat_id: chatId, message, sender }])
-        .select('id')
-        .single()
-
-    return messageId.data?.id as number
 }

@@ -33,3 +33,13 @@ export const getChatMessages = async (chatId: number): Promise<ChatMessage[]> =>
 
     return messagesData
 }
+
+export const insertNewMessageInDb = async (chatId: number, message: string, sender: 'user' | 'system') => {
+    const messageId = await supabase
+        .from('user_chat_messages')
+        .insert([{ user_chat_id: chatId, message, sender }])
+        .select('id')
+        .single()
+
+    return messageId.data?.id as number
+}

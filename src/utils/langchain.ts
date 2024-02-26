@@ -16,6 +16,8 @@ import {
 import { OpenAIEmbeddingModel, PreLangchainDoc } from '@/types/Langchain'
 import { EmbeddingsInterface } from '@langchain/core/embeddings'
 import { SupabaseLibArgs } from 'langchain/vectorstores/supabase'
+import { Callbacks, BaseCallbackManager } from '@langchain/core/callbacks/manager'
+import { BaseCallbackHandler } from '@langchain/core/callbacks/base'
 
 /** Loads langchain doc for repo */
 export const getDocsForRepo = async ({ owner, repoName }: { owner: string; repoName: string }) => {
@@ -98,8 +100,12 @@ export const getVectorStoreFromExistingIndex = async ({
     return vectorStore
 }
 
-export const getModelWithParser = (modelName: 'gpt-4' | 'gpt-3.5-turbo-0125') => {
-    const model = new ChatOpenAI({ modelName }).pipe(new StringOutputParser())
+export const getModelWithParser = (
+    modelName: 'gpt-4' | 'gpt-3.5-turbo-0125',
+    streaming: boolean = false,
+    callbacks?: Callbacks
+) => {
+    const model = new ChatOpenAI({ modelName, streaming, callbacks}).pipe(new StringOutputParser())
     return model
 }
 

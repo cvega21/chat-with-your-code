@@ -108,9 +108,10 @@ export const RepoMeta = ({
                         <BasicButton text={'Load to Vector DB'} onClick={loadRepoToVectorDB} />
                     </>
                 ) : (
-                    <>
-                        <BasicButton text={chatId ? 'Resume Chat' : 'Begin Chat'} onClick={chatId ? resumeChat : startNewChat} />
-                    </>
+                    <BasicButton
+                        text={chatId ? 'Resume Chat' : 'Begin Chat'}
+                        onClick={chatId ? resumeChat : startNewChat}
+                    />
                 )}
             </div>
             <p className='italic font-light text-stone-500'>{visibility}</p>

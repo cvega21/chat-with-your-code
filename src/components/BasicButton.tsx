@@ -6,7 +6,7 @@ export const BasicButton = ({
     className,
     buttonType
 }: {
-    onClick: any
+    onClick: (e?: React.MouseEvent<HTMLButtonElement>) => any
     text: string
     className?: string
     buttonType?: 'submit' | 'button' | 'reset'

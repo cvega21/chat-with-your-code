@@ -6,37 +6,30 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { GetServerSideProps, NextPageContext } from 'next'
+import Link from 'next/link'
+import { useChat } from 'ai/react'
+import { Message as VercelChatMessage } from 'ai'
 
 export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) {
-    const { owner, repoName, chatId, messages } = chatDetails
-    const [curMessage, setCurMessage] = useState<string>('')
-    const [messageHistory, setMessageHistory] = useState<ChatMessage[]>(messages)
+    const { owner, repoName, chatId, messages: dbMessages } = chatDetails
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
     const inputRef = useRef<HTMLInputElement | null>(null)
-
-    const sendMessage = async () => {
-        if (curMessage === '') {
-            toast.error('Message cannot be empty')
-            return
-        }
-        setMessageHistory([
-            ...messageHistory,
-            { id: messageHistory.length, message: curMessage, sender: 'user' },
-        ])
-        setCurMessage('')
-        const toastId = toast.loading('Loading...')
-        const res = await callApi('postChatMessage', {
+    const initialMessages: VercelChatMessage[] = dbMessages.map(m => ({
+        content: m.message,
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        id: m.id.toString(),
+    }))
+    const {
+        messages: vercelMessages,
+        input,
+        handleInputChange,
+        handleSubmit,
+    } = useChat({
+        body: {
             chatId,
-            message: curMessage,
-        })
-        console.log({ res })
-        if (res.result === 'success' && res.data) {
-            setMessageHistory(res.data.history)
-            toast.dismiss(toastId)
-        } else {
-            toast.error('Failed to send message')
-        }
-    }
+        },
+        initialMessages,
+    })
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -46,16 +39,13 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
         if (inputRef.current) {
             inputRef.current.focus()
         }
-    }, [messageHistory.length])
+    }, [vercelMessages])
 
     return (
         <PageWrapper>
-            <BasicButton
-                text='Go Back'
-                onClick={() => {
-                    window.history.back()
-                }}
-            />
+            <Link href='/'>
+                <BasicButton text='Go Back' onClick={() => {}} />
+            </Link>
             <div className='w-full h-full flex-grow flex flex-col justify-between'>
                 {chatDetails && (
                     <>
@@ -64,12 +54,14 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         </h1>
                     </>
                 )}
-                <ChatMessages messages={messageHistory} ref={messagesEndRef} />
+                <ChatMessages messages={vercelMessages} ref={messagesEndRef} />
                 <form
                     className='w-full flex bg-stone-700 rounded-lg'
-                    onSubmit={(e) => {
+                    onSubmit={e => {
+                        console.log('submit')
                         e.preventDefault()
-                        sendMessage()
+                        e.stopPropagation()
+                        handleSubmit(e)
                     }}
                 >
                     <input
@@ -78,9 +70,14 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         placeholder='Chat with your code...'
                         name='chatbox'
                         autoComplete='off'
-                        value={curMessage}
-                        onChange={e => setCurMessage(e.target.value)}
+                        value={input}
+                        onChange={handleInputChange}
                         ref={inputRef}
+                        onSubmit={e => {
+                            console.log('submit thru input')
+                            e.preventDefault()
+                            e.stopPropagation()
+                        }}
                     />
                     <BasicButton
                         text={'Send'}
@@ -94,7 +91,7 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
     )
 }
 
-const ChatMessages = React.forwardRef<HTMLDivElement, { messages: ChatMessage[] }>(
+const ChatMessages = React.forwardRef<HTMLDivElement, { messages: VercelChatMessage[] }>(
     ({ messages }, ref) => {
         return (
             <div
@@ -105,15 +102,15 @@ const ChatMessages = React.forwardRef<HTMLDivElement, { messages: ChatMessage[] 
                     <div
                         key={message.id}
                         className={`flex w-full ${
-                            message.sender === 'system' ? 'justify-start' : 'justify-end'
+                            message.role === 'assistant' ? 'justify-start' : 'justify-end'
                         }`}
                     >
                         <div
                             className={`max-w-max py-2 px-3 rounded-xl ${
-                                message.sender === 'system' ? 'bg-stone-700' : 'bg-sky-600'
+                                message.role === 'assistant' ? 'bg-stone-700' : 'bg-sky-600'
                             }`}
                         >
-                            <p>{message.message}</p>
+                            <p>{message.content}</p>
                         </div>
                     </div>
                 ))}

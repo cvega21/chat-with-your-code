@@ -1,5 +1,6 @@
 import { ChatDetails, ChatMessage } from './Chat'
 import { GithubFile } from './Github'
+import { Message as VercelChatMessage } from 'ai'
 
 export type TestReqBody = {
     test: string
@@ -63,6 +64,13 @@ export interface ServerRoutesMeta {
         }
         res: APIResponse<{ chatId: number; repoName: string }[]>
     }
+    postChatMessageStream: {
+        args: {
+            chatId: number
+            messages: VercelChatMessage[]
+        }
+        res: APIResponse<{ response: string; history: VercelChatMessage[] }> // unused because it's a stream
+    }
 }
 
 export type ServerMethod = 'POST' | 'GET'
@@ -75,6 +83,7 @@ export const ServerMethodMapping: Record<keyof ServerRoutes, ServerMethod> = {
     getChatDetails: 'POST',
     postChatMessage: 'POST',
     getRecentChats: 'POST',
+    postChatMessageStream: 'POST',
 }
 
 export type ServerRoutesArgs = {
