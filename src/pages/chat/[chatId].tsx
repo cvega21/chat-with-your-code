@@ -9,6 +9,7 @@ import { GetServerSideProps, NextPageContext } from 'next'
 import Link from 'next/link'
 import { useChat } from 'ai/react'
 import { Message as VercelChatMessage } from 'ai'
+import { TailSpin } from 'react-loading-icons'
 
 export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) {
     const { owner, repoName, chatId, messages: dbMessages } = chatDetails
@@ -24,6 +25,7 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
         input,
         handleInputChange,
         handleSubmit,
+        isLoading,
     } = useChat({
         body: {
             chatId,
@@ -54,7 +56,11 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
                         </h1>
                     </>
                 )}
-                <ChatMessages messages={vercelMessages} ref={messagesEndRef} />
+                <ChatMessages
+                    messages={vercelMessages}
+                    ref={messagesEndRef}
+                    isLoading={isLoading}
+                />
                 <form
                     className='w-full flex bg-stone-700 rounded-lg'
                     onSubmit={e => {
@@ -91,33 +97,60 @@ export default function UserChat({ chatDetails }: { chatDetails: ChatDetails }) 
     )
 }
 
-const ChatMessages = React.forwardRef<HTMLDivElement, { messages: VercelChatMessage[] }>(
-    ({ messages }, ref) => {
-        return (
-            <div
-                ref={ref}
-                className='flex flex-col justify-between gap-4 max-h-[70vh] overflow-y-scroll px-2'
-            >
-                {messages.map(message => (
+const ChatMessages = React.forwardRef<
+    HTMLDivElement,
+    { messages: VercelChatMessage[]; isLoading: boolean }
+>(({ messages, isLoading }, ref) => {
+    const lastMessage = messages[messages.length - 1]
+    const lastMessageIsAssistant = lastMessage?.role === 'assistant'
+
+    return (
+        <div
+            ref={ref}
+            className='flex flex-col justify-between gap-4 max-h-[70vh] overflow-y-scroll px-2'
+        >
+            {messages.map((message, idx) => (
+                <div
+                    key={message.id}
+                    className={`flex w-full ${
+                        message.role === 'assistant' ? 'items-start' : 'items-end'
+                    } flex-col`}
+                >
+                    <div className='flex text-stone-500 items-center'>
+                        <p className='px-2 text-sm pb-1'>
+                            {message.role === 'assistant' ? 'CodeGPT' : 'You'}
+                        </p>
+                        {isLoading && idx === messages.length - 1 && lastMessageIsAssistant && (
+                            <TailSpin speed={2} strokeWidth={2.5} height={12} width={12} scale={0.5}/>
+                        )}
+                    </div>
                     <div
-                        key={message.id}
-                        className={`flex w-full ${
-                            message.role === 'assistant' ? 'justify-start' : 'justify-end'
+                        className={`max-w-max py-2 px-3 rounded-xl ${
+                            message.role === 'assistant' ? 'bg-stone-700' : 'bg-sky-600'
                         }`}
                     >
-                        <div
-                            className={`max-w-max py-2 px-3 rounded-xl ${
-                                message.role === 'assistant' ? 'bg-stone-700' : 'bg-sky-600'
-                            }`}
-                        >
-                            <p>{message.content}</p>
-                        </div>
+                        <p>{message.content}</p>
                     </div>
-                ))}
+                </div>
+            ))}
+            {isLoading && !lastMessageIsAssistant && <LoadingSystemMessagePlaceholder />}
+        </div>
+    )
+})
+
+const LoadingSystemMessagePlaceholder = () => {
+    return (
+        <div key={'system-message-placeholder'} className={`flex w-full items-start flex-col`}>
+            <div className='flex text-stone-500 items-center'>
+                <p className='px-2 text-sm pb-1'>CodeGPT</p>
+                <TailSpin speed={2} strokeWidth={2.5} height={12} width={12} scale={0.5} />
             </div>
-        )
-    }
-)
+            <div className={`max-w-max py-2 px-3 rounded-xl bg-stone-700 text-stone-500`}>
+                <p>Thinking...</p>
+            </div>
+        </div>
+    )
+}
 
 export const getServerSideProps = async (context: NextPageContext) => {
     const { query } = context
